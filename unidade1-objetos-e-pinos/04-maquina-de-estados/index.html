@@ -1,0 +1,2223 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados no ESP32 (simulado no Wokwi), de classes que controlam pinos até tarefas, filas e semáforos do FreeRTOS.">
+      
+      
+        <meta name="author" content="lacouth">
+      
+      
+        <link rel="canonical" href="https://lacouth.github.io/cpp_embedded-site/unidade1-objetos-e-pinos/04-maquina-de-estados/">
+      
+      
+        <link rel="prev" href="../03-tempo-composicao/">
+      
+      
+        <link rel="next" href="../../unidade2-perto-do-metal/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>4. Máquinas de estados - C++ Embarcado — de objetos a FreeRTOS no ESP32</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#4-maquinas-de-estados" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-header__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            C++ Embarcado — de objetos a FreeRTOS no ESP32
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4. Máquinas de estados
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/lacouth/cpp_embedded" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cpp_embedded
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-nav__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    C++ Embarcado — de objetos a FreeRTOS no ESP32
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lacouth/cpp_embedded" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cpp_embedded
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nivelamento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nivelamento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../setup/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambiente
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ambiente
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/wokwi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wokwi (simulador)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/compilador-online/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilador online
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/ambiente-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambiente local (opcional)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1 · Objetos que controlam pinos
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 1 · Objetos que controlam pinos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-do-sketch-ao-objeto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Do sketch ao objeto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-construtores-botao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Construtores, const e invariantes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-tempo-composicao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Tempo sem bloquear e composição
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Máquinas de estados
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Máquinas de estados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-semaforo-do-jeito-ingenuo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O semáforo do jeito ingênuo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estados-transicoes-e-eventos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estados, transições e eventos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#os-estados-como-enum-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Os estados como enum class
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-classe-semaforo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A classe Semaforo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debounce-o-botao-tambem-e-uma-maquina-de-estados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debounce: o botão também é uma máquina de estados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juntando-semaforo-com-botao-de-pedestre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Juntando: semáforo com botão de pedestre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade2-perto-do-metal/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2 · C++ perto do metal
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 2 · C++ perto do metal
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Avaliação 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Avaliação 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../avaliacoes/a1-regras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regras e formato
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade3-comunicacao/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 3 · Comunicação e interrupções
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 3 · Comunicação e interrupções
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade4-freertos/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 4 · Tempo real com FreeRTOS
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 4 · Tempo real com FreeRTOS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Avaliação 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Avaliação 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../avaliacoes/a2-regras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regras e formato
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade5-conectividade/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 5 · Conectividade
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 5 · Conectividade
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../listas/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Listas de exercícios
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Listas de exercícios
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 01 · Do sketch ao objeto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 02 · Construtores e botões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 03 · Tempo e composição
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 04 · Máquinas de estados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../projeto/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projeto Final
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Projeto Final
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projeto/temas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Temas sugeridos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apêndices
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Apêndices
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/pinagem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pinagem do ESP32 no curso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/erros-comuns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Erros comuns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-semaforo-do-jeito-ingenuo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O semáforo do jeito ingênuo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estados-transicoes-e-eventos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estados, transições e eventos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#os-estados-como-enum-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Os estados como enum class
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-classe-semaforo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A classe Semaforo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debounce-o-botao-tambem-e-uma-maquina-de-estados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debounce: o botão também é uma máquina de estados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juntando-semaforo-com-botao-de-pedestre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Juntando: semáforo com botão de pedestre
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="4-maquinas-de-estados">4. Máquinas de estados<a class="headerlink" href="#4-maquinas-de-estados" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Vídeo</p>
+<p>Ainda não há vídeo para este capítulo.</p>
+</div>
+<p>Um semáforo fica verde, depois amarelo, depois vermelho, e volta ao verde. Um botão está solto, depois <em>talvez</em> apertado, depois apertado de verdade. Os dois são exemplos do padrão mais usado em firmware: a <strong>máquina de estados</strong>. Neste capítulo ela vira uma classe, com <code>enum class</code> para os estados e <code>switch</code> para as regras. No fim, o botão que quicava no capítulo 2 fica resolvido de vez.</p>
+<h2 id="o-semaforo-do-jeito-ingenuo">O semáforo do jeito ingênuo<a class="headerlink" href="#o-semaforo-do-jeito-ingenuo" title="Permanent link">&para;</a></h2>
+<p>Com o que se sabia no capítulo 1, um semáforo sai assim:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="n">verde</span><span class="p">.</span><span class="n">liga</span><span class="p">();</span><span class="w">     </span><span class="n">delay</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span><span class="w"> </span><span class="n">verde</span><span class="p">.</span><span class="n">desliga</span><span class="p">();</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="n">amarelo</span><span class="p">.</span><span class="n">liga</span><span class="p">();</span><span class="w">   </span><span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span><span class="w"> </span><span class="n">amarelo</span><span class="p">.</span><span class="n">desliga</span><span class="p">();</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="n">vermelho</span><span class="p">.</span><span class="n">liga</span><span class="p">();</span><span class="w">  </span><span class="n">delay</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span><span class="w"> </span><span class="n">vermelho</span><span class="p">.</span><span class="n">desliga</span><span class="p">();</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">}</span>
+</code></pre></div>
+<p>Funciona até alguém pedir um botão de pedestre que encurte o verde. Durante o <code>delay(5000)</code> o botão não é lido, e mesmo que fosse, o programa não teria como "pular" para o fim da espera. O capítulo 3 já ensinou a trocar a espera por consultas ao relógio. O que falta é um jeito organizado de lembrar <strong>em que fase o semáforo está</strong> e decidir, a cada volta, se é hora de mudar.</p>
+<h2 id="estados-transicoes-e-eventos">Estados, transições e eventos<a class="headerlink" href="#estados-transicoes-e-eventos" title="Permanent link">&para;</a></h2>
+<p>Uma máquina de estados tem três ingredientes:</p>
+<ul>
+<li><strong>estados</strong>: as situações possíveis, uma de cada vez (verde, amarelo, vermelho);</li>
+<li><strong>transições</strong>: as regras de mudança ("do verde vai para o amarelo quando...");</li>
+<li><strong>eventos</strong> e <strong>condições</strong>: o que dispara uma transição (o tempo na fase passou de 5 s; o pedestre apertou o botão).</li>
+</ul>
+<p>Antes de escrever código, desenhe. O semáforo com pedestre fica assim:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>              passou 5 s, ou
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>       (pedido e passou 1 s)        passou 1 s
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  ┌───────┐ ───────────────► ┌─────────┐ ──────────► ┌──────────┐
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  │ VERDE │                  │ AMARELO │             │ VERMELHO │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  └───────┘ ◄─────────────────────────────────────── └──────────┘
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                           passou 3 s
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                    (o pedido é atendido ao entrar no vermelho)
+</code></pre></div>
+<p>O desenho já responde perguntas que, no código, viram bugs: o pedido de pedestre durante o vermelho faz alguma coisa? (Não na hora: só o verde olha o pedido. Ele fica anotado e encurta o <strong>próximo</strong> verde.) E um pedido durante o amarelo? (É esquecido ao entrar no vermelho: a travessia já vai acontecer.) O verde pode durar menos que 1 s? (Não: o mínimo vale mesmo com pedido.)</p>
+<h2 id="os-estados-como-enum-class">Os estados como <code>enum class</code><a class="headerlink" href="#os-estados-como-enum-class" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Fase</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Verde</span><span class="p">,</span><span class="w"> </span><span class="n">Amarelo</span><span class="p">,</span><span class="w"> </span><span class="n">Vermelho</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+<p>O <code>enum class</code> (do <a href="https://lacouth.github.io/cpp_begins-site/unidade1-funcoes/03-structs-enum/">capítulo 3 do C++ do Zero</a>) é perfeito para estados: uma variável <code>Fase</code> só pode valer uma das três opções, e o compilador não deixa misturar com <code>int</code> sem querer. <code>fase_ == 1</code> não compila; <code>fase_ == Fase::Amarelo</code> é a única forma de perguntar.</p>
+<h2 id="a-classe-semaforo">A classe <code>Semaforo</code><a class="headerlink" href="#a-classe-semaforo" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">TEMPO_VERDE_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5000</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">TEMPO_VERDE_MINIMO_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span><span class="w">   </span><span class="c1">// mesmo com pedido de pedestre</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">TEMPO_AMARELO_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">TEMPO_VERMELHO_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3000</span><span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">Semaforo</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">private</span><span class="o">:</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="n">Led</span><span class="w"> </span><span class="n">verde_</span><span class="p">;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="n">Led</span><span class="w"> </span><span class="n">amarelo_</span><span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="n">Led</span><span class="w"> </span><span class="n">vermelho_</span><span class="p">;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="n">Fase</span><span class="w"> </span><span class="n">fase_</span><span class="p">;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">entrou_ms_</span><span class="p">;</span><span class="w">   </span><span class="c1">// quando entrou na fase atual</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">pedido_</span><span class="p">;</span><span class="w">               </span><span class="c1">// um pedestre pediu para atravessar</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="c1">// Unico lugar que troca de fase: acende o LED certo e marca o tempo.</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">entra</span><span class="p">(</span><span class="n">Fase</span><span class="w"> </span><span class="n">nova</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">        </span><span class="n">fase_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nova</span><span class="p">;</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">        </span><span class="n">entrou_ms_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">        </span><span class="n">verde_</span><span class="p">.</span><span class="n">desliga</span><span class="p">();</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">        </span><span class="n">amarelo_</span><span class="p">.</span><span class="n">desliga</span><span class="p">();</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">        </span><span class="n">vermelho_</span><span class="p">.</span><span class="n">desliga</span><span class="p">();</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">nova</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">Fase</span><span class="o">::</span><span class="no">Verde</span><span class="p">:</span><span class="w">    </span><span class="n">verde_</span><span class="p">.</span><span class="n">liga</span><span class="p">();</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">Fase</span><span class="o">::</span><span class="no">Amarelo</span><span class="p">:</span><span class="w">  </span><span class="n">amarelo_</span><span class="p">.</span><span class="n">liga</span><span class="p">();</span><span class="w">  </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">Fase</span><span class="o">::</span><span class="no">Vermelho</span><span class="p">:</span><span class="w"> </span><span class="n">vermelho_</span><span class="p">.</span><span class="n">liga</span><span class="p">();</span><span class="w"> </span><span class="n">pedido_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="k">public</span><span class="o">:</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">    </span><span class="n">Semaforo</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pino_verde</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pino_amarelo</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pino_vermelho</span><span class="p">)</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">verde_</span><span class="p">(</span><span class="n">pino_verde</span><span class="p">),</span><span class="w"> </span><span class="n">amarelo_</span><span class="p">(</span><span class="n">pino_amarelo</span><span class="p">),</span><span class="w"> </span><span class="n">vermelho_</span><span class="p">(</span><span class="n">pino_vermelho</span><span class="p">),</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">          </span><span class="n">fase_</span><span class="p">(</span><span class="n">Fase</span><span class="o">::</span><span class="n">Verde</span><span class="p">),</span><span class="w"> </span><span class="n">entrou_ms_</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">pedido_</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">inicia</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="w">        </span><span class="n">verde_</span><span class="p">.</span><span class="n">inicia</span><span class="p">();</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="w">        </span><span class="n">amarelo_</span><span class="p">.</span><span class="n">inicia</span><span class="p">();</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="w">        </span><span class="n">vermelho_</span><span class="p">.</span><span class="n">inicia</span><span class="p">();</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="w">        </span><span class="n">entra</span><span class="p">(</span><span class="n">Fase</span><span class="o">::</span><span class="n">Verde</span><span class="p">);</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="w">    </span><span class="c1">// Evento: o botao do pedestre foi apertado.</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">pede_travessia</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="w">        </span><span class="n">pedido_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="w">    </span><span class="c1">// Chame a cada volta do loop(): decide se e hora de trocar de fase.</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">atualiza</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">na_fase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">entrou_ms_</span><span class="p">;</span>
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a><span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">fase_</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">Fase</span><span class="o">::</span><span class="no">Verde</span><span class="p">:</span>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">na_fase</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">TEMPO_VERDE_MS</span><span class="w"> </span><span class="o">||</span>
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a><span class="w">                    </span><span class="p">(</span><span class="n">pedido_</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">na_fase</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">TEMPO_VERDE_MINIMO_MS</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a><span class="w">                    </span><span class="n">entra</span><span class="p">(</span><span class="n">Fase</span><span class="o">::</span><span class="n">Amarelo</span><span class="p">);</span>
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a><span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">Fase</span><span class="o">::</span><span class="no">Amarelo</span><span class="p">:</span>
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">na_fase</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">TEMPO_AMARELO_MS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a><span class="w">                    </span><span class="n">entra</span><span class="p">(</span><span class="n">Fase</span><span class="o">::</span><span class="n">Vermelho</span><span class="p">);</span>
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a><span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>
+<a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">Fase</span><span class="o">::</span><span class="no">Vermelho</span><span class="p">:</span>
+<a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">na_fase</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">TEMPO_VERMELHO_MS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a><span class="w">                    </span><span class="n">entra</span><span class="p">(</span><span class="n">Fase</span><span class="o">::</span><span class="n">Verde</span><span class="p">);</span>
+<a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-3-68" name="__codelineno-3-68" href="#__codelineno-3-68"></a><span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-3-69" name="__codelineno-3-69" href="#__codelineno-3-69"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-3-70" name="__codelineno-3-70" href="#__codelineno-3-70"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a>
+<a id="__codelineno-3-72" name="__codelineno-3-72" href="#__codelineno-3-72"></a><span class="w">    </span><span class="n">Fase</span><span class="w"> </span><span class="n">fase</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-73" name="__codelineno-3-73" href="#__codelineno-3-73"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">fase_</span><span class="p">;</span>
+<a id="__codelineno-3-74" name="__codelineno-3-74" href="#__codelineno-3-74"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-75" name="__codelineno-3-75" href="#__codelineno-3-75"></a><span class="p">};</span>
+</code></pre></div>
+<p>Quatro decisões de projeto que valem para toda máquina de estados deste curso:</p>
+<ol>
+<li><strong>Um <code>case</code> por estado, olhando só para as saídas dele.</strong> O <code>case Fase::Amarelo</code> não sabe nada de pedestre. Cada pedaço do <code>switch</code> é pequeno e responde a uma pergunta só: "estando aqui, para onde vou?".</li>
+<li><strong>Um único lugar troca de estado: <code>entra()</code>.</strong> Mudar a fase, apagar os LEDs, acender o certo e marcar o tempo andam sempre juntos. Se cada <code>case</code> fizesse isso por conta própria, bastaria esquecer o <code>entrou_ms_ = millis()</code> em um deles para a fase seguinte durar zero. <code>entra()</code> é <strong>privado</strong>: só a própria classe troca de fase.</li>
+<li><strong>O evento só registra; quem decide é <code>atualiza()</code>.</strong> <code>pede_travessia()</code> não troca de fase, só anota <code>pedido_ = true</code>. A decisão continua concentrada no <code>switch</code>, onde está a regra do verde mínimo.</li>
+<li><strong>Composição de novo.</strong> O <code>Semaforo</code> tem três <code>Led</code> e usa só a interface pública deles, como o <code>Pisca</code> do capítulo 3.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Método privado</p>
+<p>Até aqui, todo método era <code>public</code>. <code>entra()</code> é uma peça interna: ninguém de fora deveria poder trocar a fase, senão o invariante "o LED aceso corresponde a <code>fase_</code>" estaria à mercê de qualquer um. Métodos privados são ajudantes da própria classe.</p>
+</div>
+<p>No computador, com o "loop" rodando de 100 em 100 ms (<code>exemplos/cap04_semaforo.cpp</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>so o tempo:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  t=5000 ms -&gt; amarelo
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  t=6000 ms -&gt; vermelho
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  t=9000 ms -&gt; verde
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>pedestre aperta em t=10500:
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  t=10600 ms -&gt; amarelo
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  t=11600 ms -&gt; vermelho
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  t=14600 ms -&gt; verde
+</code></pre></div>
+<p>Sem pedido, o verde dura 5 s. Com o pedido em t=10500, o verde (que começou em 9000 e já tinha passado do mínimo de 1 s) termina na volta seguinte.</p>
+<h2 id="debounce-o-botao-tambem-e-uma-maquina-de-estados">Debounce: o botão também é uma máquina de estados<a class="headerlink" href="#debounce-o-botao-tambem-e-uma-maquina-de-estados" title="Permanent link">&para;</a></h2>
+<p>No capítulo 2, o botão do Wokwi quicava: um aperto virava dezenas de bordas. A observação que resolve o problema é simples: <strong>o quique dura pouco</strong>. Se a leitura ficar parada no mesmo valor por, digamos, 30 ms, é um aperto de verdade. Se mudar antes disso, é quique.</p>
+<p>Isso é uma máquina de estados com quatro estados:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>                lido apertado                         firme por 30 ms
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  ┌───────┐ ──────────────────► ┌────────────────┐ ───────────────► ┌──────────┐
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  │ SOLTO │                     │ TALVEZ APERTADO│    (CLIQUE!)     │ APERTADO │
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  └───────┘ ◄────────────────── └────────────────┘                  └──────────┘
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>      ▲         lido solto (era quique)                                  │
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      │                                                                  │ lido solto
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      │  firme por 30 ms        ┌──────────────┐                         │
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>      └──────────────────────── │ TALVEZ SOLTO │ ◄───────────────────────┘
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                                └──────────────┘ ───► APERTADO, se lido apertado (era quique)
+</code></pre></div>
+<p>O clique é anunciado <strong>na transição</strong> de "talvez apertado" para "apertado", e só nela.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Quanto tempo a leitura precisa ficar parada para ser levada a serio.</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">const</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">ESTAVEL_MS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span><span class="p">;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">EstadoBotao</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Solto</span><span class="p">,</span><span class="w"> </span><span class="n">TalvezApertado</span><span class="p">,</span><span class="w"> </span><span class="n">Apertado</span><span class="p">,</span><span class="w"> </span><span class="n">TalvezSolto</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">BotaoFiltrado</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">private</span><span class="o">:</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pino_</span><span class="p">;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="n">EstadoBotao</span><span class="w"> </span><span class="n">estado_</span><span class="p">;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">desde_ms_</span><span class="p">;</span><span class="w">   </span><span class="c1">// quando a leitura mudou pela ultima vez</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">clique_</span><span class="p">;</span><span class="w">              </span><span class="c1">// houve clique NESTA volta?</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="k">public</span><span class="o">:</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">BotaoFiltrado</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pino</span><span class="p">)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">pino_</span><span class="p">(</span><span class="n">pino</span><span class="p">),</span><span class="w"> </span><span class="n">estado_</span><span class="p">(</span><span class="n">EstadoBotao</span><span class="o">::</span><span class="n">Solto</span><span class="p">),</span><span class="w"> </span><span class="n">desde_ms_</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">clique_</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">inicia</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">        </span><span class="n">pinMode</span><span class="p">(</span><span class="n">pino_</span><span class="p">,</span><span class="w"> </span><span class="n">INPUT_PULLUP</span><span class="p">);</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">    </span><span class="c1">// Chame uma vez por volta do loop(), antes de perguntar qualquer coisa.</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">atualiza</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">lido</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">digitalRead</span><span class="p">(</span><span class="n">pino_</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">agora</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">        </span><span class="n">clique_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">estado_</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">EstadoBotao</span><span class="o">::</span><span class="no">Solto</span><span class="p">:</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">lido</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">                    </span><span class="n">estado_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EstadoBotao</span><span class="o">::</span><span class="n">TalvezApertado</span><span class="p">;</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">                    </span><span class="n">desde_ms_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">agora</span><span class="p">;</span>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">EstadoBotao</span><span class="o">::</span><span class="no">TalvezApertado</span><span class="p">:</span>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">lido</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="w">                    </span><span class="n">estado_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EstadoBotao</span><span class="o">::</span><span class="n">Solto</span><span class="p">;</span><span class="w">          </span><span class="c1">// era quique</span>
+<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">agora</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">desde_ms_</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">ESTAVEL_MS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="w">                    </span><span class="n">estado_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EstadoBotao</span><span class="o">::</span><span class="n">Apertado</span><span class="p">;</span><span class="w">       </span><span class="c1">// firme: e clique</span>
+<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a><span class="w">                    </span><span class="n">clique_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a><span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a>
+<a id="__codelineno-6-44" name="__codelineno-6-44" href="#__codelineno-6-44"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">EstadoBotao</span><span class="o">::</span><span class="no">Apertado</span><span class="p">:</span>
+<a id="__codelineno-6-45" name="__codelineno-6-45" href="#__codelineno-6-45"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">lido</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-46" name="__codelineno-6-46" href="#__codelineno-6-46"></a><span class="w">                    </span><span class="n">estado_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EstadoBotao</span><span class="o">::</span><span class="n">TalvezSolto</span><span class="p">;</span>
+<a id="__codelineno-6-47" name="__codelineno-6-47" href="#__codelineno-6-47"></a><span class="w">                    </span><span class="n">desde_ms_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">agora</span><span class="p">;</span>
+<a id="__codelineno-6-48" name="__codelineno-6-48" href="#__codelineno-6-48"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-6-49" name="__codelineno-6-49" href="#__codelineno-6-49"></a><span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-6-50" name="__codelineno-6-50" href="#__codelineno-6-50"></a>
+<a id="__codelineno-6-51" name="__codelineno-6-51" href="#__codelineno-6-51"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">EstadoBotao</span><span class="o">::</span><span class="no">TalvezSolto</span><span class="p">:</span>
+<a id="__codelineno-6-52" name="__codelineno-6-52" href="#__codelineno-6-52"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">lido</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-53" name="__codelineno-6-53" href="#__codelineno-6-53"></a><span class="w">                    </span><span class="n">estado_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EstadoBotao</span><span class="o">::</span><span class="n">Apertado</span><span class="p">;</span><span class="w">       </span><span class="c1">// era quique</span>
+<a id="__codelineno-6-54" name="__codelineno-6-54" href="#__codelineno-6-54"></a><span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">agora</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">desde_ms_</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">ESTAVEL_MS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-55" name="__codelineno-6-55" href="#__codelineno-6-55"></a><span class="w">                    </span><span class="n">estado_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EstadoBotao</span><span class="o">::</span><span class="n">Solto</span><span class="p">;</span>
+<a id="__codelineno-6-56" name="__codelineno-6-56" href="#__codelineno-6-56"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-6-57" name="__codelineno-6-57" href="#__codelineno-6-57"></a><span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-6-58" name="__codelineno-6-58" href="#__codelineno-6-58"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-6-59" name="__codelineno-6-59" href="#__codelineno-6-59"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-60" name="__codelineno-6-60" href="#__codelineno-6-60"></a>
+<a id="__codelineno-6-61" name="__codelineno-6-61" href="#__codelineno-6-61"></a><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">foi_apertado</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-62" name="__codelineno-6-62" href="#__codelineno-6-62"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">clique_</span><span class="p">;</span>
+<a id="__codelineno-6-63" name="__codelineno-6-63" href="#__codelineno-6-63"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-64" name="__codelineno-6-64" href="#__codelineno-6-64"></a>
+<a id="__codelineno-6-65" name="__codelineno-6-65" href="#__codelineno-6-65"></a><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">esta_apertado</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-66" name="__codelineno-6-66" href="#__codelineno-6-66"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">estado_</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">EstadoBotao</span><span class="o">::</span><span class="n">Apertado</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">estado_</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">EstadoBotao</span><span class="o">::</span><span class="n">TalvezSolto</span><span class="p">;</span>
+<a id="__codelineno-6-67" name="__codelineno-6-67" href="#__codelineno-6-67"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-68" name="__codelineno-6-68" href="#__codelineno-6-68"></a><span class="p">};</span>
+</code></pre></div>
+<p>O formato é o que a Lista 02 apresentou no exercício 4: <strong><code>atualiza()</code> lê, uma vez por volta; as perguntas são <code>const</code> e podem ser feitas quantas vezes se quiser</strong>.</p>
+<p>O exemplo <code>exemplos/cap04_debounce.cpp</code> alimenta o botão com um aperto que quica na descida e na subida, lido a cada 5 ms:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>clique aceito em t=60 ms
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>bordas no sinal cru: 4
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cliques do BotaoFiltrado: 1
+</code></pre></div>
+<p>O sinal tinha 4 bordas; o <code>BotaoFiltrado</code> anunciou 1 clique, 30 ms depois de a leitura assentar.</p>
+<p>No Wokwi, o projeto <code>wokwi/cap04-debounce/</code> é o contador do capítulo 2 com o <code>BotaoFiltrado</code> e <strong>sem</strong> <code>"bounce": "0"</code>: o simulador está quicando o botão de propósito. Cinco apertos, cinco cliques.</p>
+<div class="admonition note">
+<p class="admonition-title">Por que 30 ms?</p>
+<p>Botões comuns quicam por alguns milissegundos. 30 ms é folgado para o quique e curto demais para alguém perceber atraso. Se um botão de verdade ainda contar cliques a mais, aumente; se parecer "lento", diminua. Esse é o tipo de número que fica numa constante com nome, e não espalhado pelo código.</p>
+</div>
+<h2 id="juntando-semaforo-com-botao-de-pedestre">Juntando: semáforo com botão de pedestre<a class="headerlink" href="#juntando-semaforo-com-botao-de-pedestre" title="Permanent link">&para;</a></h2>
+<p>O projeto <code>wokwi/cap04-semaforo/</code> usa as duas máquinas ao mesmo tempo, com o botão quicando:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">"botao_filtrado.h"</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">"semaforo.h"</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">Semaforo</span><span class="w"> </span><span class="nf">semaforo</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="mi">26</span><span class="p">);</span><span class="w">   </span><span class="c1">// verde, amarelo, vermelho</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">BotaoFiltrado</span><span class="w"> </span><span class="nf">pedestre</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">Fase</span><span class="w"> </span><span class="n">ultima_fase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Fase</span><span class="o">::</span><span class="n">Verde</span><span class="p">;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="n">semaforo</span><span class="p">.</span><span class="n">inicia</span><span class="p">();</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="n">pedestre</span><span class="p">.</span><span class="n">inicia</span><span class="p">();</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"verde"</span><span class="p">);</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="p">}</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="n">pedestre</span><span class="p">.</span><span class="n">atualiza</span><span class="p">();</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pedestre</span><span class="p">.</span><span class="n">foi_apertado</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">        </span><span class="n">semaforo</span><span class="p">.</span><span class="n">pede_travessia</span><span class="p">();</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">        </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"  (pedestre pediu)"</span><span class="p">);</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">    </span><span class="n">semaforo</span><span class="p">.</span><span class="n">atualiza</span><span class="p">();</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">    </span><span class="c1">// Imprime so quando a fase muda.</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">semaforo</span><span class="p">.</span><span class="n">fase</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ultima_fase</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">        </span><span class="n">ultima_fase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">semaforo</span><span class="p">.</span><span class="n">fase</span><span class="p">();</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">        </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">nome_da_fase</span><span class="p">(</span><span class="n">ultima_fase</span><span class="p">));</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="p">}</span>
+</code></pre></div>
+<p><code>nome_da_fase()</code> é uma função livre em <code>semaforo.h</code> que converte cada <code>Fase</code> no texto correspondente, com um <code>switch</code>.</p>
+<p>Repare que o <code>loop()</code> é o do capítulo 3: uma lista de <code>atualiza()</code> e de perguntas rápidas. Duas máquinas de estados rodam lado a lado, cada uma no seu ritmo, e uma conversa com a outra por um evento (<code>pede_travessia()</code>). Esse formato aguenta muito mais do que parece. O projeto final de vários grupos vai ser exatamente isso, com mais máquinas.</p>
+<h2 id="erros-comuns">Erros comuns<a class="headerlink" href="#erros-comuns" title="Permanent link">&para;</a></h2>
+<p><strong>Esquecer o <code>break</code> num <code>case</code>.</strong> A execução "cai" no <code>case</code> seguinte e faz duas transições numa volta só. Compilando com <code>-Wextra</code> (como fazem o <code>check.sh</code> e o compilador online, se você ligar os avisos), o compilador acusa: <code>this statement may fall through</code>. Leia os avisos.</p>
+<p><strong><code>fase_++</code> para ir à próxima fase.</strong> Não compila com <code>enum class</code>, e é bom que não compile: a ordem das fases é uma regra do sistema, e regra fica escrita no <code>switch</code>.</p>
+<p><strong>Trocar de estado sem marcar o tempo.</strong> Se um <code>case</code> faz <code>fase_ = Fase::Amarelo;</code> sem atualizar <code>entrou_ms_</code>, o amarelo herda o tempo do verde e dura zero. Concentre a troca num método como <code>entra()</code>.</p>
+<p><strong>Perguntar <code>foi_apertado()</code> antes de <code>atualiza()</code>.</strong> A resposta é da volta anterior. A ordem no <code>loop()</code> é sempre: atualizar, depois perguntar.</p>
+<p><strong>O pedido de pedestre "some".</strong> Ele foi registrado, mas apagado antes de ser atendido (por exemplo, zerando <code>pedido_</code> no lugar errado). Pelo desenho, o pedido é atendido <strong>ao entrar no vermelho</strong>, e é só ali que ele é zerado.</p>
+<h2 id="resumo">Resumo<a class="headerlink" href="#resumo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Uma <strong>máquina de estados</strong> tem estados (um de cada vez), transições e os eventos ou condições que as disparam. Desenhe antes de programar.</li>
+<li>Em C++: estados num <code>enum class</code>, regras num <code>switch</code> dentro de <code>atualiza()</code>, um <code>case</code> por estado.</li>
+<li>Um único método (privado) troca de estado e faz tudo o que acompanha a troca.</li>
+<li>Eventos externos só registram (<code>pede_travessia()</code>); a decisão fica no <code>switch</code>.</li>
+<li><strong>Debounce</strong> é uma máquina de estados: só um aperto que fica firme por um tempo vira clique.</li>
+<li>Várias máquinas rodam juntas no mesmo <code>loop()</code>, desde que nenhuma espere.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.indexes", "content.code.copy", "content.code.annotate", "content.tabs.link", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
