@@ -2004,12 +2004,19 @@
 </tbody>
 </table>
 <p>No Wokwi, o LED azul da placa pisca e o Monitor Serial alterna <code>aceso</code> e <code>apagado</code>. O projeto completo está em <code>wokwi/cap01-blink/</code>.</p>
+<p><img alt="Esquemático do projeto cap01-blink" src="../../esquemas/cap01-blink-claro.svg#only-light" />
+<img alt="Esquemático do projeto cap01-blink" src="../../esquemas/cap01-blink-escuro.svg#only-dark" /></p>
+<p><em>Esquemático de <code>cap01-blink</code>: o LED azul e o seu resistor já vêm soldados na placa, ligados ao GPIO 2.</em></p>
 <div class="admonition note">
 <p class="admonition-title">O <code>delay()</code> é provisório</p>
 <p>Enquanto o <code>delay(500)</code> roda, o processador não faz mais nada. Com um LED, ninguém percebe. No capítulo 3, com um botão na jogada, isso vira um problema, e é lá que ele sai do código.</p>
 </div>
 <h2 id="tres-leds-com-codigo-solto">Três LEDs com código solto<a class="headerlink" href="#tres-leds-com-codigo-solto" title="Permanent link">&para;</a></h2>
-<p>Agora ponha três LEDs na bancada (vermelho no GPIO 26, amarelo no 27, verde no 25, cada um com seu resistor; veja a <a href="../../apendices/pinagem/">pinagem</a>). Escrito do mesmo jeito, o código começa a se espalhar:</p>
+<p>Agora ponha três LEDs na bancada (vermelho no GPIO 26, amarelo no 27, verde no 25, cada um com seu resistor; veja a <a href="../../apendices/pinagem/">pinagem</a>).</p>
+<p><img alt="Esquemático do projeto cap01-tres-leds" src="../../esquemas/cap01-tres-leds-claro.svg#only-light" />
+<img alt="Esquemático do projeto cap01-tres-leds" src="../../esquemas/cap01-tres-leds-escuro.svg#only-dark" /></p>
+<p><em>Esquemático de <code>cap01-tres-leds</code>: cada LED fica em série com um resistor de 220 Ω, entre o pino e o GND. Pino em <code>HIGH</code> acende.</em></p>
+<p>Escrito do mesmo jeito do blink, o código começa a se espalhar:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="n">pinMode</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="n">pinMode</span><span class="p">(</span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>

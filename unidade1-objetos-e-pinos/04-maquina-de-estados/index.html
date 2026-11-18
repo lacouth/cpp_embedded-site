@@ -2102,12 +2102,18 @@
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cliques do BotaoFiltrado: 1
 </code></pre></div>
 <p>O sinal tinha 4 bordas; o <code>BotaoFiltrado</code> anunciou 1 clique, 30 ms depois de a leitura assentar.</p>
+<p><img alt="Esquemático do projeto cap04-debounce" src="../../esquemas/cap04-debounce-claro.svg#only-light" />
+<img alt="Esquemático do projeto cap04-debounce" src="../../esquemas/cap04-debounce-escuro.svg#only-dark" /></p>
+<p><em>Esquemático de <code>cap04-debounce</code>: o mesmo circuito do capítulo 2. O que mudou foi só o código do botão.</em></p>
 <p>No Wokwi, o projeto <code>wokwi/cap04-debounce/</code> é o contador do capítulo 2 com o <code>BotaoFiltrado</code> e <strong>sem</strong> <code>"bounce": "0"</code>: o simulador está quicando o botão de propósito. Cinco apertos, cinco cliques.</p>
 <div class="admonition note">
 <p class="admonition-title">Por que 30 ms?</p>
 <p>Botões comuns quicam por alguns milissegundos. 30 ms é folgado para o quique e curto demais para alguém perceber atraso. Se um botão de verdade ainda contar cliques a mais, aumente; se parecer "lento", diminua. Esse é o tipo de número que fica numa constante com nome, e não espalhado pelo código.</p>
 </div>
 <h2 id="juntando-semaforo-com-botao-de-pedestre">Juntando: semáforo com botão de pedestre<a class="headerlink" href="#juntando-semaforo-com-botao-de-pedestre" title="Permanent link">&para;</a></h2>
+<p><img alt="Esquemático do projeto cap04-semaforo" src="../../esquemas/cap04-semaforo-claro.svg#only-light" />
+<img alt="Esquemático do projeto cap04-semaforo" src="../../esquemas/cap04-semaforo-escuro.svg#only-dark" /></p>
+<p><em>Esquemático de <code>cap04-semaforo</code>: verde no GPIO 25, amarelo no 27, vermelho no 26, e o botão de pedestre no 32.</em></p>
 <p>O projeto <code>wokwi/cap04-semaforo/</code> usa as duas máquinas ao mesmo tempo, com o botão quicando:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">"botao_filtrado.h"</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">"semaforo.h"</span>

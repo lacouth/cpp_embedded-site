@@ -3073,6 +3073,8 @@
 <p><strong>Pisca da placa, com a classe.</strong> Refaça o primeiro blink do capítulo usando a classe <code>Led</code> no LED azul da placa (GPIO 2). O <code>sketch.ino</code> já está pronto; complete os métodos <code>liga()</code>, <code>desliga()</code> e <code>alterna()</code> em <code>led.h</code>.</p>
 <p><strong>Critério de pronto:</strong> ao rodar, o LED azul da placa pisca (meio segundo aceso, meio segundo apagado) e o Monitor Serial alterna <code>aceso</code> e <code>apagado</code>, <strong>começando por <code>aceso</code></strong>.</p>
 <p>Depois de funcionar, responda: se você apagar a linha <code>status.inicia();</code> do <code>setup()</code>, o que acontece? Teste.</p>
+<p><img alt="Esquemático do circuito de wk01" src="../../esquemas/lista01-wk01-claro.svg#only-light" />
+<img alt="Esquemático do circuito de wk01" src="../../esquemas/lista01-wk01-escuro.svg#only-dark" /></p>
 <p><strong>Projeto inicial</strong> — crie um projeto ESP32 no Wokwi e cole cada aba no arquivo de mesmo nome (veja <a href="../../setup/wokwi/">como montar o projeto</a>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">sketch.ino</label><label for="__tabbed_1_2">led.h</label><label for="__tabbed_1_3">diagram.json</label></div>
 <div class="tabbed-content">
@@ -3163,6 +3165,8 @@
 <p><code>led.h</code> já está completo, e os três objetos já estão declarados e iniciados. Falta escrever o <code>loop()</code>.</p>
 <p><strong>Critério de pronto:</strong> o Monitor Serial mostra a sequência <code>vermelho</code>, <code>amarelo</code>, <code>verde</code>, <code>amarelo</code>, repetindo, e nunca há dois LEDs acesos ao mesmo tempo.</p>
 <p><strong>Desafio:</strong> o <code>loop()</code> fica repetitivo (acende, imprime, espera, apaga, quatro vezes). Escreva uma função <code>void pisca_um(Led&amp; led, const char* nome)</code> que faça isso para um LED, e use-a quatro vezes. Por que o parâmetro precisa ser <code>Led&amp;</code> e não <code>Led</code>?</p>
+<p><img alt="Esquemático do circuito de wk02" src="../../esquemas/lista01-wk02-claro.svg#only-light" />
+<img alt="Esquemático do circuito de wk02" src="../../esquemas/lista01-wk02-escuro.svg#only-dark" /></p>
 <p><strong>Projeto inicial</strong> — crie um projeto ESP32 no Wokwi e cole cada aba no arquivo de mesmo nome (veja <a href="../../setup/wokwi/">como montar o projeto</a>).</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">sketch.ino</label><label for="__tabbed_2_2">led.h</label><label for="__tabbed_2_3">diagram.json</label></div>
 <div class="tabbed-content">

@@ -1862,7 +1862,11 @@
 </div>
 <p>Até aqui, todo LED piscou com <code>delay()</code>. Neste capítulo o <code>delay()</code> sai do código, e não volta mais. No lugar dele entra uma classe que <strong>olha o relógio</strong> em vez de esperar. E, para piscar um LED com ela, montamos uma classe feita de outras duas: é a <strong>composição</strong>.</p>
 <h2 id="o-problema-delay-nao-deixa-mais-nada-acontecer">O problema: <code>delay()</code> não deixa mais nada acontecer<a class="headerlink" href="#o-problema-delay-nao-deixa-mais-nada-acontecer" title="Permanent link">&para;</a></h2>
-<p>O projeto <code>wokwi/cap03-delay-atrapalha/</code> pisca o LED vermelho a cada segundo e, no mesmo <code>loop()</code>, deveria alternar o amarelo a cada clique no botão A:</p>
+<p>O projeto <code>wokwi/cap03-delay-atrapalha/</code> pisca o LED vermelho a cada segundo e, no mesmo <code>loop()</code>, deveria alternar o amarelo a cada clique no botão A.</p>
+<p><img alt="Esquemático do projeto cap03-delay-atrapalha" src="../../esquemas/cap03-delay-atrapalha-claro.svg#only-light" />
+<img alt="Esquemático do projeto cap03-delay-atrapalha" src="../../esquemas/cap03-delay-atrapalha-escuro.svg#only-dark" /></p>
+<p><em>Esquemático de <code>cap03-delay-atrapalha</code>: a bancada que este capítulo usa do começo ao fim: três LEDs com resistor e o botão A.</em></p>
+<p>O <code>loop()</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="n">vermelho</span><span class="p">.</span><span class="n">alterna</span><span class="p">();</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span><span class="w">                   </span><span class="c1">// um segundo inteiro sem olhar para o botao</span>

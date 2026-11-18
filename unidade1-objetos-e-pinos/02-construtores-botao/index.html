@@ -2082,6 +2082,9 @@
 <p>Três voltas seguidas com o botão apertado (2, 3 e 4) produzem <strong>um</strong> clique. O segundo clique só aparece na volta 6, depois que o botão foi solto na 5.</p>
 <p>Repare na ordem dentro de <code>foi_apertado()</code>: a borda é calculada <strong>antes</strong> de <code>anterior_</code> ser atualizado. Invertendo as duas linhas, <code>agora</code> seria comparado consigo mesmo e a borda nunca apareceria.</p>
 <h2 id="botao-e-led-juntos">Botão e LED juntos<a class="headerlink" href="#botao-e-led-juntos" title="Permanent link">&para;</a></h2>
+<p><img alt="Esquemático do projeto cap02-botao-led" src="../../esquemas/cap02-botao-led-claro.svg#only-light" />
+<img alt="Esquemático do projeto cap02-botao-led" src="../../esquemas/cap02-botao-led-escuro.svg#only-dark" /></p>
+<p><em>Esquemático de <code>cap02-botao-led</code>: o botão liga o GPIO 32 ao GND quando apertado; não há resistor externo porque o pull-up é interno ao chip.</em></p>
 <p>O projeto <code>wokwi/cap02-botao-led/</code> alterna o LED vermelho a cada clique no botão A e conta os cliques:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">"botao.h"</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">"led.h"</span>
