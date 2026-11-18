@@ -6,19 +6,19 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados no ESP32 (simulado no Wokwi), de classes que controlam pinos até tarefas, filas e semáforos do FreeRTOS.">
+        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados e de tempo real no ESP32 (simulado no Wokwi), de classes que controlam pinos até escalonamento, filas e semáforos do FreeRTOS.">
       
       
         <meta name="author" content="lacouth">
       
       
-        <link rel="canonical" href="https://lacouth.github.io/cpp_embedded-site/unidade3-comunicacao/">
+        <link rel="canonical" href="https://lacouth.github.io/cpp_embedded-site/unidade3-tempo-real/">
       
       
         <link rel="prev" href="../avaliacoes/a1-regras/">
       
       
-        <link rel="next" href="../unidade4-freertos/">
+        <link rel="next" href="../unidade4-escalonamento/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Visão geral - C++ Embarcado — de objetos a FreeRTOS no ESP32</title>
+        <title>Visão geral - Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#unidade-3-comunicacao-e-interrupcoes" class="md-skip">
+        <a href="#unidade-3-fundamentos-de-tempo-real" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -96,7 +96,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
-    <a href=".." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-header__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+    <a href=".." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-header__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -110,7 +110,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            C++ Embarcado — de objetos a FreeRTOS no ESP32
+            Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -234,13 +234,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-nav__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+    <a href=".." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-nav__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    C++ Embarcado — de objetos a FreeRTOS no ESP32
+    Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
   </label>
   
     <div class="md-nav__source">
@@ -868,7 +868,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Comunicação e interrupções
+    Unidade 3 · Fundamentos de tempo real
   
 
     
@@ -885,7 +885,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Comunicação e interrupções
+    Unidade 3 · Fundamentos de tempo real
   
 
           </label>
@@ -930,14 +930,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../unidade4-freertos/" class="md-nav__link ">
+            <a href="../unidade4-escalonamento/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Tempo real com FreeRTOS
+    Unidade 4 · Escalonamento e sincronização
   
 
     
@@ -954,7 +954,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Tempo real com FreeRTOS
+    Unidade 4 · Escalonamento e sincronização
   
 
           </label>
@@ -1090,14 +1090,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../unidade5-conectividade/" class="md-nav__link ">
+            <a href="../unidade5-sistemas-completos/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Conectividade
+    Unidade 5 · Sistemas completos
   
 
     
@@ -1114,7 +1114,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Conectividade
+    Unidade 5 · Sistemas completos
   
 
           </label>
@@ -1646,8 +1646,8 @@
   
 
 
-<h1 id="unidade-3-comunicacao-e-interrupcoes">Unidade 3 · Comunicação e interrupções<a class="headerlink" href="#unidade-3-comunicacao-e-interrupcoes" title="Permanent link">&para;</a></h1>
-<p>Semanas 6 a 8. O ESP32 passa a conversar com outros chips: pelo Monitor Serial (UART), por um barramento de dois fios (I2C) e por um de quatro fios (SPI). No fim da unidade, o hardware passa a <strong>avisar</strong> o programa (interrupções) em vez de esperar ser consultado.</p>
+<h1 id="unidade-3-fundamentos-de-tempo-real">Unidade 3 · Fundamentos de tempo real<a class="headerlink" href="#unidade-3-fundamentos-de-tempo-real" title="Permanent link">&para;</a></h1>
+<p>Semanas 6 e 7. Um sistema de <strong>tempo real</strong> não é um sistema rápido: é um sistema em que a resposta certa, entregue tarde demais, está errada. A unidade dá nome às medidas que importam (prazo, latência, jitter), mostra até onde o <code>loop()</code> cooperativo da Unidade 1 aguenta, e apresenta o FreeRTOS, que já roda por baixo do core Arduino do ESP32.</p>
 <div class="admonition warning">
 <p class="admonition-title">Em construção</p>
 <p>Os capítulos desta unidade ainda estão sendo escritos. A tabela abaixo é o plano.</p>
@@ -1659,47 +1659,41 @@
 <th>Aula</th>
 <th>Capítulo</th>
 <th>C++</th>
-<th>Hardware</th>
+<th>Tempo real</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>6</td>
 <td>A</td>
-<td>10. UART e parser de comandos</td>
-<td>máquina de estados por caractere, <code>RingBuffer</code> do cap. 9</td>
-<td><code>Serial</code>, comandos digitados no Monitor Serial</td>
+<td>10. Memória estática e <code>RingBuffer</code></td>
+<td>pilha × estático × heap, <code>std::array</code>, <code>template</code> de classe simples</td>
+<td>a ISR da UART enche um <code>RingBuffer</code>, o <code>loop()</code> consome e interpreta comandos</td>
 </tr>
 <tr>
 <td>6</td>
 <td>B</td>
-<td>11. I2C e displays</td>
-<td>interface <code>IDisplay</code>, implementação falsa com "tela" em memória</td>
-<td>scanner I2C, LCD 1602 / OLED SSD1306</td>
+<td>11. Fundamentos de tempo real</td>
+<td>classe <code>ExecutivoCiclico</code></td>
+<td>prazo (<em>deadline</em>), latência, jitter, tarefas periódicas, executivo cíclico, prazo perdido</td>
 </tr>
 <tr>
 <td>7</td>
 <td>A</td>
-<td>12. Sensor I2C por registradores</td>
-<td>bytes → <code>int16_t</code>, os bits do cap. 5 de novo</td>
-<td>MPU6050 lido com <code>Wire</code>, sem biblioteca</td>
+<td>12. FreeRTOS: tarefas, prioridades e preempção</td>
+<td>ponteiro para função</td>
+<td><code>xTaskCreatePinnedToCore</code>, prioridade, pilha, <code>vTaskDelay</code>, preempção</td>
 </tr>
 <tr>
 <td>7</td>
 <td>B</td>
-<td>13. SPI</td>
-<td>classe-driver de um periférico SPI</td>
-<td>matriz de LED MAX7219, Logic Analyzer do Wokwi</td>
-</tr>
-<tr>
-<td>8</td>
-<td>A</td>
-<td>14. Interrupções e timers</td>
-<td><code>volatile</code>, <code>IRAM_ATTR</code>, seção crítica, ISR curta</td>
-<td><code>attachInterrupt</code>, encoder rotativo, timer de hardware</td>
+<td>13. Tarefas periódicas como objetos</td>
+<td>método <code>static</code> como trampolim, <code>this</code> como parâmetro</td>
+<td><code>vTaskDelayUntil</code>, jitter medido, <em>high water mark</em> da pilha</td>
 </tr>
 </tbody>
 </table>
+<p>O fio condutor: o capítulo 3 mostrou que um <code>delay()</code> atrasa todos os objetos. O capítulo 11 mede esse atraso e lhe dá nome. O capítulo 12 resolve com preempção: a tarefa mais importante interrompe a menos importante.</p>
 
 
 

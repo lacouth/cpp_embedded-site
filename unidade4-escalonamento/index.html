@@ -6,19 +6,19 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados no ESP32 (simulado no Wokwi), de classes que controlam pinos até tarefas, filas e semáforos do FreeRTOS.">
+        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados e de tempo real no ESP32 (simulado no Wokwi), de classes que controlam pinos até escalonamento, filas e semáforos do FreeRTOS.">
       
       
         <meta name="author" content="lacouth">
       
       
-        <link rel="canonical" href="https://lacouth.github.io/cpp_embedded-site/unidade5-conectividade/">
+        <link rel="canonical" href="https://lacouth.github.io/cpp_embedded-site/unidade4-escalonamento/">
       
       
-        <link rel="prev" href="../avaliacoes/a2-regras/">
+        <link rel="prev" href="../unidade3-tempo-real/">
       
       
-        <link rel="next" href="../listas/">
+        <link rel="next" href="../avaliacoes/a2-regras/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Visão geral - C++ Embarcado — de objetos a FreeRTOS no ESP32</title>
+        <title>Visão geral - Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#unidade-5-conectividade" class="md-skip">
+        <a href="#unidade-4-escalonamento-e-sincronizacao" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -96,7 +96,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
-    <a href=".." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-header__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+    <a href=".." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-header__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -110,7 +110,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            C++ Embarcado — de objetos a FreeRTOS no ESP32
+            Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -234,13 +234,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-nav__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+    <a href=".." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-nav__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    C++ Embarcado — de objetos a FreeRTOS no ESP32
+    Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
   </label>
   
     <div class="md-nav__source">
@@ -859,14 +859,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../unidade3-comunicacao/" class="md-nav__link ">
+            <a href="../unidade3-tempo-real/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Comunicação e interrupções
+    Unidade 3 · Fundamentos de tempo real
   
 
     
@@ -883,7 +883,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Comunicação e interrupções
+    Unidade 3 · Fundamentos de tempo real
   
 
           </label>
@@ -902,6 +902,8 @@
       
   
   
+    
+  
   
   
     
@@ -920,22 +922,22 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../unidade4-freertos/" class="md-nav__link ">
+            <a href="./" class="md-nav__link md-nav__link--active">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Tempo real com FreeRTOS
+    Unidade 4 · Escalonamento e sincronização
   
 
     
@@ -947,12 +949,12 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Tempo real com FreeRTOS
+    Unidade 4 · Escalonamento e sincronização
   
 
           </label>
@@ -1062,8 +1064,6 @@
       
   
   
-    
-  
   
   
     
@@ -1082,22 +1082,22 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../unidade5-sistemas-completos/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Conectividade
+    Unidade 5 · Sistemas completos
   
 
     
@@ -1109,12 +1109,12 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Conectividade
+    Unidade 5 · Sistemas completos
   
 
           </label>
@@ -1646,35 +1646,50 @@
   
 
 
-<h1 id="unidade-5-conectividade">Unidade 5 · Conectividade<a class="headerlink" href="#unidade-5-conectividade" title="Permanent link">&para;</a></h1>
-<p>Semanas 11 e 12. Um capítulo só, que junta tudo: uma tarefa FreeRTOS mantém o Wi-Fi e a conexão MQTT de pé, recebe leituras de sensores por uma fila e publica na internet. É a arquitetura de referência do <a href="../projeto/">projeto final</a>.</p>
+<h1 id="unidade-4-escalonamento-e-sincronizacao">Unidade 4 · Escalonamento e sincronização<a class="headerlink" href="#unidade-4-escalonamento-e-sincronizacao" title="Permanent link">&para;</a></h1>
+<p>Semanas 8 e 9. Com várias tarefas no ar, duas perguntas mandam no projeto: <strong>todas vão cumprir os prazos?</strong> (escalonamento) e <strong>como trocam dados sem se atrapalhar?</strong> (sincronização). A unidade responde as duas, e fecha usando um barramento I2C de verdade como recurso disputado por duas tarefas.</p>
 <div class="admonition warning">
 <p class="admonition-title">Em construção</p>
-<p>O capítulo desta unidade ainda está sendo escrito. A tabela abaixo é o plano.</p>
+<p>Os capítulos desta unidade ainda estão sendo escritos. A tabela abaixo é o plano.</p>
 </div>
 <table>
 <thead>
 <tr>
 <th>Semana</th>
 <th>Aula</th>
-<th>Conteúdo</th>
+<th>Capítulo</th>
+<th>C++</th>
+<th>Tempo real</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>11</td>
+<td>8</td>
 <td>A</td>
-<td>19. Wi-Fi e MQTT: <code>WiFi.begin("Wokwi-GUEST", "", 6)</code>, PubSubClient, máquina de estados de reconexão, publicação a partir de uma fila</td>
+<td>14. Escalonamento por prioridades</td>
+<td>simulador de escalonador no host</td>
+<td>prioridades fixas, <em>rate monotonic</em>, teste de utilização, prazo perdido</td>
 </tr>
 <tr>
-<td>11</td>
+<td>8</td>
 <td>B</td>
-<td>Laboratório do projeto: demonstração parcial (lógica testada no host + uma tarefa rodando no Wokwi)</td>
+<td>15. Filas e ISR diferida</td>
+<td><code>struct</code> como mensagem</td>
+<td><code>xQueueSend</code>/<code>xQueueReceive</code>, <code>FromISR</code>, notificação de tarefa, latência de resposta</td>
 </tr>
 <tr>
-<td>12</td>
-<td>A e B</td>
-<td>Apresentações dos projetos</td>
+<td>9</td>
+<td>A</td>
+<td>16. Recursos compartilhados</td>
+<td>RAII: a classe <code>Trava</code> (o <code>lock_guard</code> do C++ do Zero)</td>
+<td>condição de corrida, mutex, semáforo, <strong>inversão de prioridade</strong> e herança de prioridade</td>
+</tr>
+<tr>
+<td>9</td>
+<td>B</td>
+<td>17. I2C como recurso compartilhado</td>
+<td>interface <code>IDisplay</code>, bytes → <code>int16_t</code></td>
+<td>sensor (MPU6050) e display em tarefas diferentes, no mesmo barramento, protegido por mutex</td>
 </tr>
 </tbody>
 </table>

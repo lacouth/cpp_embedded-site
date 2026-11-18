@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados no ESP32 (simulado no Wokwi), de classes que controlam pinos até tarefas, filas e semáforos do FreeRTOS.">
+        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados e de tempo real no ESP32 (simulado no Wokwi), de classes que controlam pinos até escalonamento, filas e semáforos do FreeRTOS.">
       
       
         <meta name="author" content="lacouth">
@@ -27,7 +27,7 @@
     
     
       
-        <title>C++ Embarcado — de objetos a FreeRTOS no ESP32</title>
+        <title>Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#c-embarcado-de-objetos-a-freertos-no-esp32" class="md-skip">
+        <a href="#tecnicas-de-programacao-ii-sistemas-embarcados-e-de-tempo-real-com-c" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
-    <a href="." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-header__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+    <a href="." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-header__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,7 +108,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            C++ Embarcado — de objetos a FreeRTOS no ESP32
+            Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -232,13 +232,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-nav__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+    <a href="." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-nav__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    C++ Embarcado — de objetos a FreeRTOS no ESP32
+    Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
   </label>
   
     <div class="md-nav__source">
@@ -959,14 +959,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="unidade3-comunicacao/" class="md-nav__link ">
+            <a href="unidade3-tempo-real/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Comunicação e interrupções
+    Unidade 3 · Fundamentos de tempo real
   
 
     
@@ -983,7 +983,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Comunicação e interrupções
+    Unidade 3 · Fundamentos de tempo real
   
 
           </label>
@@ -1028,14 +1028,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="unidade4-freertos/" class="md-nav__link ">
+            <a href="unidade4-escalonamento/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Tempo real com FreeRTOS
+    Unidade 4 · Escalonamento e sincronização
   
 
     
@@ -1052,7 +1052,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Tempo real com FreeRTOS
+    Unidade 4 · Escalonamento e sincronização
   
 
           </label>
@@ -1188,14 +1188,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="unidade5-conectividade/" class="md-nav__link ">
+            <a href="unidade5-sistemas-completos/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Conectividade
+    Unidade 5 · Sistemas completos
   
 
     
@@ -1212,7 +1212,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Conectividade
+    Unidade 5 · Sistemas completos
   
 
           </label>
@@ -1807,16 +1807,17 @@
   
 
 
-<h1 id="c-embarcado-de-objetos-a-freertos-no-esp32">C++ Embarcado — de objetos a FreeRTOS no ESP32<a class="headerlink" href="#c-embarcado-de-objetos-a-freertos-no-esp32" title="Permanent link">&para;</a></h1>
-<p>Bem-vindo(a)! Este curso continua o <strong><a href="https://lacouth.github.io/cpp_begins-site/">C++ do Zero</a></strong>. Lá você aprendeu a linguagem; aqui você vai usá-la para o que ela faz de melhor fora de um PC: <strong>controlar hardware</strong>. Tudo roda num ESP32 simulado no <a href="setup/wokwi/">Wokwi</a>, direto no navegador, sem precisar comprar placa nenhuma.</p>
+<h1 id="tecnicas-de-programacao-ii-sistemas-embarcados-e-de-tempo-real-com-c">Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++<a class="headerlink" href="#tecnicas-de-programacao-ii-sistemas-embarcados-e-de-tempo-real-com-c" title="Permanent link">&para;</a></h1>
+<p>Bem-vindo(a)! Este curso continua o <strong><a href="https://lacouth.github.io/cpp_begins-site/">C++ do Zero</a></strong>. Lá você aprendeu a linguagem; aqui você vai usá-la para o que ela faz de melhor fora de um PC: <strong>controlar hardware, e no tempo certo</strong>. Tudo roda num ESP32 simulado no <a href="setup/wokwi/">Wokwi</a>, direto no navegador, sem precisar comprar placa nenhuma.</p>
 <h2 id="para-quem-e-este-curso">Para quem é este curso<a class="headerlink" href="#para-quem-e-este-curso" title="Permanent link">&para;</a></h2>
 <p>Para quem já escreveu uma classe em C++, mesmo que sem muita segurança. Se você fez o C++ do Zero, está pronto. Se veio por outro caminho (sabe C, mas <code>class</code>, construtor e referência ainda soam estranhos), comece pela página de <a href="nivelamento/">Nivelamento</a>: ela diz exatamente o que revisar antes da primeira aula.</p>
 <p>O curso <strong>não</strong> assume que você já mexeu com eletrônica. Cada peça nova (LED, botão, potenciômetro, display) é apresentada na hora em que aparece, com o mínimo de eletrônica necessário para o código fazer sentido.</p>
 <h2 id="a-ideia-do-curso-em-uma-frase">A ideia do curso em uma frase<a class="headerlink" href="#a-ideia-do-curso-em-uma-frase" title="Permanent link">&para;</a></h2>
-<p>Cada aula junta <strong>um conceito de C++</strong> com <strong>um pedaço de hardware</strong>, em passos pequenos. A classe da aula anterior quase sempre é a peça da aula seguinte:</p>
+<p>Cada aula junta <strong>um conceito de C++</strong> com <strong>um pedaço de hardware</strong>, em passos pequenos, e o caminho termina em <strong>sistemas de tempo real</strong>: programas que precisam responder não só certo, mas <strong>a tempo</strong>. A classe da aula anterior quase sempre é a peça da aula seguinte:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Led  ──►  Botao  ──►  Temporizador  ──►  Semaforo (máquina de estados)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ──►  bits e registradores  ──►  PWM/ADC  ──►  interfaces testáveis  ──►  buffers sem heap
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  ──►  UART, I2C, SPI  ──►  interrupções  ──►  tarefas FreeRTOS  ──►  filas  ──►  mutex  ──►  MQTT
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ──►  bits e registradores  ──►  PWM/ADC  ──►  interfaces testáveis  ──►  interrupções
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  ──►  RingBuffer  ──►  prazo, latência e jitter  ──►  tarefas FreeRTOS  ──►  escalonamento
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  ──►  filas  ──►  mutex e inversão de prioridade  ──►  I2C, SPI, watchdog  ──►  MQTT
 </code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Dois lugares para rodar código, de propósito</p>
@@ -1831,10 +1832,10 @@
 <p>São <strong>12 semanas, com duas aulas de 90 minutos</strong> em laboratório, divididas em 5 unidades:</p>
 <ol>
 <li><strong>Objetos que controlam pinos</strong> (capítulos 1–4): classes para LED e botão, tempo sem <code>delay()</code>, composição e máquinas de estados.</li>
-<li><strong>C++ perto do metal</strong> (capítulos 5–9): tipos de tamanho fixo, bits, registradores, PWM e ADC, interfaces testáveis e memória sem heap.</li>
-<li><strong>Comunicação e interrupções</strong> (capítulos 10–14): UART, I2C, SPI, interrupções e timers de hardware.</li>
-<li><strong>Tempo real com FreeRTOS</strong> (capítulos 15–18): tarefas, tarefas como objetos, filas, mutex e semáforos.</li>
-<li><strong>Conectividade</strong> (capítulo 19): Wi-Fi e MQTT, juntando tudo na arquitetura do projeto.</li>
+<li><strong>C++ perto do metal</strong> (capítulos 5–9): tipos de tamanho fixo, bits, registradores, medição de tempo, PWM e ADC, interfaces testáveis e interrupções.</li>
+<li><strong>Fundamentos de tempo real</strong> (capítulos 10–13): memória sem heap, prazo, latência e jitter, executivo cíclico, tarefas do FreeRTOS e tarefas periódicas.</li>
+<li><strong>Escalonamento e sincronização</strong> (capítulos 14–17): prioridades e <em>rate monotonic</em>, filas e interrupções diferidas, mutex e inversão de prioridade, I2C como recurso compartilhado.</li>
+<li><strong>Sistemas completos</strong> (capítulos 18–19): SPI e robustez (watchdog, <em>timeouts</em>), Wi-Fi e MQTT sem perder prazo.</li>
 </ol>
 <p>O calendário completo:</p>
 <table>
@@ -1859,7 +1860,7 @@
 <tr>
 <td>3</td>
 <td>Cap. 5 · Tipos de tamanho fixo e bits</td>
-<td>Cap. 6 · <code>volatile</code> e registradores</td>
+<td>Cap. 6 · <code>volatile</code>, registradores e medir tempo</td>
 </tr>
 <tr>
 <td>4</td>
@@ -1868,37 +1869,37 @@
 </tr>
 <tr>
 <td>5</td>
-<td>Cap. 9 · Memória sem heap e templates simples</td>
+<td>Cap. 9 · Interrupções e timers de hardware</td>
 <td><strong>Avaliação 1</strong></td>
 </tr>
 <tr>
 <td>6</td>
-<td>Cap. 10 · UART e parser de comandos</td>
-<td>Cap. 11 · I2C e displays</td>
+<td>Cap. 10 · Memória estática e <code>RingBuffer</code></td>
+<td>Cap. 11 · Fundamentos de tempo real</td>
 </tr>
 <tr>
 <td>7</td>
-<td>Cap. 12 · Sensor I2C por registradores</td>
-<td>Cap. 13 · SPI</td>
+<td>Cap. 12 · FreeRTOS: tarefas e preempção</td>
+<td>Cap. 13 · Tarefas periódicas como objetos</td>
 </tr>
 <tr>
 <td>8</td>
-<td>Cap. 14 · Interrupções e timers</td>
-<td>Cap. 15 · Por que um RTOS</td>
+<td>Cap. 14 · Escalonamento por prioridades</td>
+<td>Cap. 15 · Filas e ISR diferida</td>
 </tr>
 <tr>
 <td>9</td>
-<td>Cap. 16 · Tarefas como objetos</td>
-<td>Cap. 17 · Filas</td>
+<td>Cap. 16 · Recursos compartilhados</td>
+<td>Cap. 17 · I2C como recurso compartilhado</td>
 </tr>
 <tr>
 <td>10</td>
-<td>Cap. 18 · Mutex, semáforos e notificações</td>
+<td>Cap. 18 · SPI e robustez</td>
 <td><strong>Avaliação 2</strong></td>
 </tr>
 <tr>
 <td>11</td>
-<td>Cap. 19 · Wi-Fi e MQTT</td>
+<td>Cap. 19 · Wi-Fi e MQTT sem perder prazo</td>
 <td>Laboratório do projeto (demo parcial)</td>
 </tr>
 <tr>

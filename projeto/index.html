@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados no ESP32 (simulado no Wokwi), de classes que controlam pinos até tarefas, filas e semáforos do FreeRTOS.">
+        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados e de tempo real no ESP32 (simulado no Wokwi), de classes que controlam pinos até escalonamento, filas e semáforos do FreeRTOS.">
       
       
         <meta name="author" content="lacouth">
@@ -29,7 +29,7 @@
     
     
       
-        <title>Briefing e rubrica - C++ Embarcado — de objetos a FreeRTOS no ESP32</title>
+        <title>Briefing e rubrica - Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++</title>
       
     
     
@@ -96,7 +96,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
-    <a href=".." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-header__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+    <a href=".." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-header__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -110,7 +110,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            C++ Embarcado — de objetos a FreeRTOS no ESP32
+            Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -234,13 +234,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-nav__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+    <a href=".." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-nav__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    C++ Embarcado — de objetos a FreeRTOS no ESP32
+    Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
   </label>
   
     <div class="md-nav__source">
@@ -859,14 +859,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../unidade3-comunicacao/" class="md-nav__link ">
+            <a href="../unidade3-tempo-real/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Comunicação e interrupções
+    Unidade 3 · Fundamentos de tempo real
   
 
     
@@ -883,7 +883,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Comunicação e interrupções
+    Unidade 3 · Fundamentos de tempo real
   
 
           </label>
@@ -928,14 +928,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../unidade4-freertos/" class="md-nav__link ">
+            <a href="../unidade4-escalonamento/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Tempo real com FreeRTOS
+    Unidade 4 · Escalonamento e sincronização
   
 
     
@@ -952,7 +952,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Tempo real com FreeRTOS
+    Unidade 4 · Escalonamento e sincronização
   
 
           </label>
@@ -1088,14 +1088,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../unidade5-conectividade/" class="md-nav__link ">
+            <a href="../unidade5-sistemas-completos/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Conectividade
+    Unidade 5 · Sistemas completos
   
 
     
@@ -1112,7 +1112,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Conectividade
+    Unidade 5 · Sistemas completos
   
 
           </label>
@@ -1718,9 +1718,11 @@
 <li>[ ] <strong>Pelo menos 3 classes com responsabilidades distintas</strong>, cada uma cuidando de uma coisa (nada de uma classe que faz tudo).</li>
 <li>[ ] <strong>Uma camada de hardware atrás de interfaces</strong> (capítulo 8): pelo menos uma interface com implementação <strong>real</strong> (que usa o hardware) e <strong>falsa</strong> (para testar no computador).</li>
 <li>[ ] <strong>A lógica de decisão testada no host</strong> com <code>assert</code>, sem Wokwi rodando. As regras do sistema (quando ligar, quando alarmar, como filtrar) precisam ter testes, não só o caminho feliz.</li>
-<li>[ ] <strong>Pelo menos 2 tarefas FreeRTOS que se comunicam por uma fila</strong> (capítulos 15 a 17).</li>
-<li>[ ] <strong>Pelo menos 1 mecanismo de sincronização além da fila</strong>: mutex protegendo um recurso compartilhado, semáforo, ou notificação vinda de uma interrupção (capítulos 14 e 18).</li>
-<li>[ ] <strong>Sem alocação dinâmica no caminho periódico</strong>: nada de <code>new</code>, <code>String</code> concatenada ou <code>vector</code> que cresce dentro de tarefas e do <code>loop()</code> (capítulo 9).</li>
+<li>[ ] <strong>Pelo menos 2 tarefas FreeRTOS que se comunicam por uma fila</strong> (capítulos 12, 13 e 15).</li>
+<li>[ ] <strong>Pelo menos 1 tarefa periódica com prazo declarado e jitter medido</strong> (capítulos 11 e 13): o README diz qual é o período, qual é o prazo e qual foi o pior atraso observado no Wokwi.</li>
+<li>[ ] <strong>Prioridades justificadas</strong> (capítulo 14): o README lista as tarefas com período, tempo de execução estimado e prioridade, explica a escolha (<em>rate monotonic</em> ou criticidade) e mostra o <strong>teste de utilização</strong>.</li>
+<li>[ ] <strong>Pelo menos 1 mecanismo de sincronização além da fila</strong>: mutex protegendo um recurso compartilhado, semáforo, ou notificação vinda de uma interrupção (capítulos 9, 15 e 16).</li>
+<li>[ ] <strong>Sem alocação dinâmica no caminho periódico</strong>: nada de <code>new</code>, <code>String</code> concatenada ou <code>vector</code> que cresce dentro de tarefas e do <code>loop()</code> (capítulo 10).</li>
 <li>[ ] <strong>README</strong> com: o que o sistema faz, a lista de componentes do Wokwi, um diagrama de blocos das classes e um diagrama das tarefas e filas (pode ser desenho à mão fotografado).</li>
 </ul>
 <h2 id="marcos">Marcos<a class="headerlink" href="#marcos" title="Permanent link">&para;</a></h2>
@@ -1736,12 +1738,12 @@
 <tr>
 <td>Proposta</td>
 <td>Semana 8</td>
-<td>tema, componentes, lista das classes previstas, quais tarefas e filas</td>
+<td>tema, componentes, lista das classes previstas, quais tarefas (com período e prazo) e filas</td>
 </tr>
 <tr>
 <td>Demo parcial</td>
 <td>Semana 11, aula B</td>
-<td>a lógica testada no host + pelo menos uma tarefa rodando no Wokwi</td>
+<td>a lógica testada no host + pelo menos uma tarefa periódica rodando no Wokwi, com o jitter medido</td>
 </tr>
 <tr>
 <td>Entrega e apresentação</td>
@@ -1764,7 +1766,7 @@
 <td>40%</td>
 </tr>
 <tr>
-<td>Qualidade do design: encapsulamento, interfaces, uso de memória, nomes claros</td>
+<td>Qualidade do design: encapsulamento, interfaces, uso de memória, escolha de prioridades e prazos</td>
 <td>25%</td>
 </tr>
 <tr>

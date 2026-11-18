@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados no ESP32 (simulado no Wokwi), de classes que controlam pinos até tarefas, filas e semáforos do FreeRTOS.">
+        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados e de tempo real no ESP32 (simulado no Wokwi), de classes que controlam pinos até escalonamento, filas e semáforos do FreeRTOS.">
       
       
         <meta name="author" content="lacouth">
@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://lacouth.github.io/cpp_embedded-site/avaliacoes/a2-regras/">
       
       
-        <link rel="prev" href="../../unidade4-freertos/">
+        <link rel="prev" href="../../unidade4-escalonamento/">
       
       
-        <link rel="next" href="../../unidade5-conectividade/">
+        <link rel="next" href="../../unidade5-sistemas-completos/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Regras e formato - C++ Embarcado — de objetos a FreeRTOS no ESP32</title>
+        <title>Regras e formato - Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++</title>
       
     
     
@@ -96,7 +96,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
-    <a href="../.." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-header__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+    <a href="../.." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-header__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -110,7 +110,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            C++ Embarcado — de objetos a FreeRTOS no ESP32
+            Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -234,13 +234,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="C++ Embarcado — de objetos a FreeRTOS no ESP32" class="md-nav__button md-logo" aria-label="C++ Embarcado — de objetos a FreeRTOS no ESP32" data-md-component="logo">
+    <a href="../.." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-nav__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    C++ Embarcado — de objetos a FreeRTOS no ESP32
+    Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
   </label>
   
     <div class="md-nav__source">
@@ -859,14 +859,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../unidade3-comunicacao/" class="md-nav__link ">
+            <a href="../../unidade3-tempo-real/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Comunicação e interrupções
+    Unidade 3 · Fundamentos de tempo real
   
 
     
@@ -883,7 +883,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Comunicação e interrupções
+    Unidade 3 · Fundamentos de tempo real
   
 
           </label>
@@ -928,14 +928,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../unidade4-freertos/" class="md-nav__link ">
+            <a href="../../unidade4-escalonamento/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Tempo real com FreeRTOS
+    Unidade 4 · Escalonamento e sincronização
   
 
     
@@ -952,7 +952,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Tempo real com FreeRTOS
+    Unidade 4 · Escalonamento e sincronização
   
 
           </label>
@@ -1203,14 +1203,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../unidade5-conectividade/" class="md-nav__link ">
+            <a href="../../unidade5-sistemas-completos/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Conectividade
+    Unidade 5 · Sistemas completos
   
 
     
@@ -1227,7 +1227,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Conectividade
+    Unidade 5 · Sistemas completos
   
 
           </label>
@@ -1835,8 +1835,8 @@
 
 <h1 id="avaliacao-2-regras-e-formato">Avaliação 2 — regras e formato<a class="headerlink" href="#avaliacao-2-regras-e-formato" title="Permanent link">&para;</a></h1>
 <h2 id="quando-e-o-que-cobre">Quando e o que cobre<a class="headerlink" href="#quando-e-o-que-cobre" title="Permanent link">&para;</a></h2>
-<p><strong>Semana 10, aula B.</strong> Capítulos 10 a 18: UART e parsers, I2C e SPI, leitura de sensores por registradores, interrupções e timers, tarefas FreeRTOS (inclusive como objetos), filas, mutex, semáforos e notificações.</p>
-<p>Os capítulos 1 a 9 não são cobrados diretamente, mas tudo o que se constrói nesta avaliação usa o que veio deles (classes, <code>const</code>, máquinas de estados, interfaces).</p>
+<p><strong>Semana 10, aula B.</strong> Capítulos 10 a 18: memória estática e <code>RingBuffer</code>, fundamentos de tempo real (prazo, latência, jitter, executivo cíclico), tarefas do FreeRTOS (inclusive como objetos e periódicas), escalonamento por prioridades e <em>rate monotonic</em>, filas e ISR diferida, mutex, semáforos e inversão de prioridade, I2C e SPI usados por tarefas, watchdog e <em>timeouts</em>.</p>
+<p>Os capítulos 1 a 9 não são cobrados diretamente, mas tudo o que se constrói nesta avaliação usa o que veio deles (classes, máquinas de estados, interfaces, interrupções).</p>
 <h2 id="peso">Peso<a class="headerlink" href="#peso" title="Permanent link">&para;</a></h2>
 <p><strong>1/3 da nota final</strong>.</p>
 <h2 id="formato-o-mesmo-da-avaliacao-1">Formato: o mesmo da Avaliação 1<a class="headerlink" href="#formato-o-mesmo-da-avaliacao-1" title="Permanent link">&para;</a></h2>
@@ -1864,9 +1864,9 @@
 </tr>
 </tbody>
 </table>
-<p>A questão de leitura desta prova costuma ser sobre <strong>concorrência</strong>: em que ordem duas tarefas imprimem, o que acontece com um contador compartilhado sem mutex, o que uma ISR pode e não pode fazer.</p>
+<p>A questão de leitura desta prova é de <strong>tempo real</strong>: dado um conjunto de tarefas com período, tempo de execução e prioridade, quem roda em cada instante e qual prazo é perdido; o que acontece com um contador compartilhado sem mutex; como uma inversão de prioridade atrasa a tarefa mais importante.</p>
 <h2 id="consulta">Consulta<a class="headerlink" href="#consulta" title="Permanent link">&para;</a></h2>
-<p>Uma folha de consulta manuscrita, frente e verso. A assinatura de <code>xTaskCreate</code> e de <code>xQueueReceive</code> são boas candidatas.</p>
+<p>Uma folha de consulta manuscrita, frente e verso. A assinatura de <code>xTaskCreatePinnedToCore</code> e de <code>xQueueReceive</code>, e a fórmula do teste de utilização, são boas candidatas.</p>
 <h2 id="como-e-corrigida">Como é corrigida<a class="headerlink" href="#como-e-corrigida" title="Permanent link">&para;</a></h2>
 <p>O mesmo princípio da Avaliação 1, com três pontos que pesam especialmente aqui:</p>
 <ul>
@@ -1878,6 +1878,7 @@
 <ol>
 <li>Refaça as listas 10 a 18.</li>
 <li>Para cada <code>wk</code> de FreeRTOS, desenhe as tarefas, as filas e quem escreve em quê antes de reler o código.</li>
+<li>Faça à mão a linha do tempo (quem roda em cada milissegundo) dos conjuntos de tarefas da Lista 14.</li>
 <li>Resolva o simulado (publicado na semana 9) cronometrado.</li>
 </ol>
 
