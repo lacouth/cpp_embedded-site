@@ -18,7 +18,7 @@
         <link rel="prev" href="../unidade1-objetos-e-pinos/04-maquina-de-estados/">
       
       
-        <link rel="next" href="../avaliacoes/a1-regras/">
+        <link rel="next" href="05-bits-em-cpp/">
       
       
         
@@ -684,6 +684,10 @@
           
         
       
+        
+      
+        
+      
     
     
     
@@ -718,6 +722,11 @@
 
             </a>
             
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
           </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
@@ -731,6 +740,62 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-bits-em-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Bits em C++ e registradores tipados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-volatile-hardware-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. volatile e Hardware Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
           </ul>
@@ -1150,6 +1215,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1316,6 +1385,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../listas/lista05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 05 · Bits e registradores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../listas/lista06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 06 · volatile e Hardware Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1444,6 +1569,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1504,6 +1633,62 @@
     
   
     Pinagem do ESP32 no curso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apendices/revisao-bits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Revisão: binário, hexadecimal e bits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apendices/padroes-no-mundo-real/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Os padrões no mundo real
   
 
     
@@ -1650,7 +1835,7 @@
 <p>Semanas 3 a 5. Em Sistemas Microcontrolados você já fez o hardware funcionar: ADC, PWM, interrupções. Esta unidade pergunta outra coisa: <strong>como organizar o código que fala com o hardware</strong> para que ele seja rápido, legível, trocável e testável sem placa. Cada capítulo apresenta um padrão de acesso ao hardware e o C++ que o torna seguro.</p>
 <div class="admonition warning">
 <p class="admonition-title">Em construção</p>
-<p>Os capítulos desta unidade ainda estão sendo escritos. A tabela abaixo é o plano.</p>
+<p>Os capítulos 5 e 6 estão prontos; os outros ainda estão sendo escritos e aparecem na tabela como plano.</p>
 </div>
 <table>
 <thead>
@@ -1667,7 +1852,7 @@
 <tr>
 <td>3</td>
 <td>A</td>
-<td>5. Bits em C++ e registradores tipados</td>
+<td><a href="05-bits-em-cpp/">5. Bits em C++ e registradores tipados</a></td>
 <td>registrador tipado</td>
 <td><code>&lt;cstdint&gt;</code>, máscaras <code>constexpr</code>, <code>enum class</code> para campos, <code>static_assert</code></td>
 <td>registrador simulado no host</td>
@@ -1675,7 +1860,7 @@
 <tr>
 <td>3</td>
 <td>B</td>
-<td>6. <code>volatile</code> e Hardware Proxy</td>
+<td><a href="06-volatile-hardware-proxy/">6. <code>volatile</code> e Hardware Proxy</a></td>
 <td>Hardware Proxy</td>
 <td><code>volatile</code>, ponteiro para endereço fixo</td>
 <td>GPIO do ESP32 por registrador; <code>micros()</code> para medir quanto custa cada operação</td>

@@ -764,6 +764,10 @@
           
         
       
+        
+      
+        
+      
     
     
     
@@ -798,6 +802,11 @@
 
             </a>
             
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
           </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
@@ -811,6 +820,62 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade2-perto-do-metal/05-bits-em-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Bits em C++ e registradores tipados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade2-perto-do-metal/06-volatile-hardware-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. volatile e Hardware Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
           </ul>
@@ -1230,6 +1295,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1396,6 +1465,62 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 05 · Bits e registradores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 06 · volatile e Hardware Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1524,6 +1649,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1584,6 +1713,62 @@
     
   
     Pinagem do ESP32 no curso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/revisao-bits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Revisão: binário, hexadecimal e bits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/padroes-no-mundo-real/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Os padrões no mundo real
   
 
     
@@ -1793,7 +1978,7 @@
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">// NAO ALTERE — Arduino de mentira (no Wokwi, use #include &lt;Arduino.h&gt;)</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">// ============================================================</span>
 </code></pre></div>
-<p>Ela define <code>pinMode</code>, <code>digitalWrite</code>, <code>digitalRead</code>, <code>millis</code> e <code>Serial</code> com os mesmos nomes do Arduino, mas sem hardware nenhum: cada pino só <strong>guarda</strong> o último valor escrito, e o relógio só anda quando o teste manda. É isso que permite testar uma classe <code>Led</code> sem LED.</p>
+<p>Ela define <code>pinMode</code>, <code>digitalWrite</code>, <code>digitalRead</code>, <code>millis</code>, <code>micros</code> e <code>Serial</code> com os mesmos nomes do Arduino, mas sem hardware nenhum: cada pino só <strong>guarda</strong> o último valor escrito, e o relógio só anda quando o teste manda. É isso que permite testar uma classe <code>Led</code> sem LED.</p>
 <p>Os testes usam algumas funções extras, que só existem nesse Arduino de mentira:</p>
 <table>
 <thead>
@@ -1821,7 +2006,11 @@
 </tr>
 <tr>
 <td><code>falso::avanca_tempo(ms)</code></td>
-<td>faz <code>millis()</code> andar <code>ms</code> milissegundos</td>
+<td>faz o relógio andar <code>ms</code> milissegundos (<code>millis()</code> e <code>micros()</code> andam juntos)</td>
+</tr>
+<tr>
+<td><code>falso::avanca_micros(us)</code></td>
+<td>faz o relógio andar <code>us</code> microssegundos (a partir do capítulo 6)</td>
 </tr>
 <tr>
 <td><code>falso::reinicia()</code></td>

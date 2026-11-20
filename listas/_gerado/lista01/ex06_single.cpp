@@ -6,6 +6,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <cstdint>
 
 // ============================================================
 // NAO ALTERE — Arduino de mentira (no Wokwi, use #include <Arduino.h>)
@@ -14,13 +15,13 @@
 // compilador online) o mesmo codigo de classe que roda no ESP32 do Wokwi.
 //
 // Nao e um simulador. E so o suficiente para:
-//   * o compilador aceitar pinMode/digitalWrite/digitalRead/millis/Serial;
+//   * o compilador aceitar pinMode/digitalWrite/digitalRead/millis/micros/Serial;
 //   * os testes perguntarem "o que a classe fez com o pino?" e "o que ela
 //     faria se o tempo andasse 500 ms?".
 //
 // Como funciona: cada pino guarda o ultimo nivel escrito e o ultimo modo
-// configurado; millis() devolve um relogio que so anda quando o teste manda
-// (falso::avanca_tempo). digitalRead devolve o que o teste pos no pino com
+// configurado; millis() e micros() leem um relogio que so anda quando o teste
+// manda (falso::avanca_tempo em ms, falso::avanca_micros em us). digitalRead devolve o que o teste pos no pino com
 // falso::poe_nivel -- e assim que se "aperta um botao" sem botao.
 //
 // No Wokwi, troque  #include "arduino_falso.h"  por  #include <Arduino.h>
@@ -52,9 +53,10 @@ inline Pino& pino(int numero) {
     return pinos[numero % NUM_PINOS];
 }
 
-inline unsigned long& relogio() {
-    static unsigned long agora_ms = 0;
-    return agora_ms;
+// O relogio guarda MICROSSEGUNDOS; millis() e so ele dividido por 1000.
+inline unsigned long long& relogio_us() {
+    static unsigned long long agora_us = 0;
+    return agora_us;
 }
 
 // Para os testes: espiar e mexer no mundo externo.
@@ -62,14 +64,15 @@ inline int nivel(int numero) { return pino(numero).nivel; }
 inline int modo(int numero) { return pino(numero).modo; }
 inline int escritas(int numero) { return pino(numero).escritas; }
 inline void poe_nivel(int numero, int nivel) { pino(numero).nivel = nivel; }
-inline void avanca_tempo(unsigned long ms) { relogio() += ms; }
+inline void avanca_tempo(unsigned long ms) { relogio_us() += 1000ull * ms; }
+inline void avanca_micros(unsigned long us) { relogio_us() += us; }
 
 // Volta tudo ao estado de "placa recem-ligada".
 inline void reinicia() {
     for (int i = 0; i < NUM_PINOS; i++) {
         pino(i) = Pino{};
     }
-    relogio() = 0;
+    relogio_us() = 0;
 }
 
 }  // namespace falso
@@ -92,12 +95,22 @@ inline int digitalRead(int numero) {
     return falso::pino(numero).nivel;
 }
 
+// Como no ESP32, os dois sao de 32 bits e dao a volta (millis em ~49 dias,
+// micros em ~71 minutos).
 inline unsigned long millis() {
-    return falso::relogio();
+    return static_cast<uint32_t>(falso::relogio_us() / 1000);
+}
+
+inline unsigned long micros() {
+    return static_cast<uint32_t>(falso::relogio_us());
 }
 
 inline void delay(unsigned long ms) {
-    falso::relogio() += ms;
+    falso::relogio_us() += 1000ull * ms;
+}
+
+inline void delayMicroseconds(unsigned int us) {
+    falso::relogio_us() += us;
 }
 
 // ---- Serial: imprime no terminal ------------------------------------------

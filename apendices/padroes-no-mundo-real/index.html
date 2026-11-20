@@ -1,0 +1,2502 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados e de tempo real no ESP32 (simulado no Wokwi), de classes que controlam pinos até escalonamento, filas e semáforos do FreeRTOS.">
+      
+      
+        <meta name="author" content="lacouth">
+      
+      
+        <link rel="canonical" href="https://lacouth.github.io/cpp_embedded-site/apendices/padroes-no-mundo-real/">
+      
+      
+        <link rel="prev" href="../revisao-bits/">
+      
+      
+        <link rel="next" href="../erros-comuns/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Os padrões no mundo real - Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#os-padroes-no-mundo-real" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-header__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Os padrões no mundo real
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/lacouth/cpp_embedded" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cpp_embedded
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-nav__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lacouth/cpp_embedded" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cpp_embedded
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nivelamento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nivelamento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../setup/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambiente
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ambiente
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/wokwi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wokwi (simulador)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/compilador-online/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilador online
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/ambiente-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambiente local (opcional)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade1-objetos-e-pinos/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1 · Objetos que controlam pinos
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 1 · Objetos que controlam pinos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade1-objetos-e-pinos/01-do-sketch-ao-objeto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Do sketch ao objeto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade1-objetos-e-pinos/02-construtores-botao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Construtores, const e invariantes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade1-objetos-e-pinos/03-tempo-composicao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Tempo sem bloquear e composição
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade1-objetos-e-pinos/04-maquina-de-estados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Máquinas de estados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade2-perto-do-metal/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade2-perto-do-metal/05-bits-em-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Bits em C++ e registradores tipados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade2-perto-do-metal/06-volatile-hardware-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. volatile e Hardware Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Avaliação 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Avaliação 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../avaliacoes/a1-regras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regras e formato
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade3-tempo-real/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 3 · Padrões de comportamento e tempo real
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 3 · Padrões de comportamento e tempo real
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade4-escalonamento/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 4 · Padrões de concorrência
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 4 · Padrões de concorrência
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Avaliação 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Avaliação 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../avaliacoes/a2-regras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regras e formato
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade5-sistemas-completos/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 5 · Sistemas robustos e conectados
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 5 · Sistemas robustos e conectados
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../listas/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Listas de exercícios
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Listas de exercícios
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 01 · Do sketch ao objeto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 02 · Construtores e botões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 03 · Tempo e composição
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 04 · Máquinas de estados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 05 · Bits e registradores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 06 · volatile e Hardware Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../projeto/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projeto Final
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Projeto Final
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projeto/temas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Temas sugeridos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apêndices
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Apêndices
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pinagem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pinagem do ESP32 no curso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../revisao-bits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Revisão: binário, hexadecimal e bits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Os padrões no mundo real
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Os padrões no mundo real
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unidade-1-objetos-que-controlam-pinos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unidade 1 · Objetos que controlam pinos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unidade-2-perto-do-metal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unidade 2 · Perto do metal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unidade-3-comportamento-e-tempo-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unidade 3 · Comportamento e tempo real
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unidade-4-concorrencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unidade 4 · Concorrência
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unidade-5-robustez-e-conexao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unidade 5 · Robustez e conexão
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quando-o-padrao-faltou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quando o padrão faltou
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quando o padrão faltou">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ariane-5-voo-501-1996-tipos-e-smart-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ariane 5, voo 501 (1996): tipos e Smart Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#therac-25-19851987-contadores-e-condicoes-de-corrida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Therac-25 (1985–1987): contadores e condições de corrida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mars-pathfinder-1997-inversao-de-prioridade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mars Pathfinder (1997): inversão de prioridade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toyota-aceleracao-nao-intencional-processos-de-2013-o-watchdog-que-nao-via-tudo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Toyota, aceleração não intencional (processos de 2013): o watchdog que não via tudo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#para-ir-alem-ler-codigo-de-verdade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Para ir além: ler código de verdade
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../erros-comuns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Erros comuns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unidade-1-objetos-que-controlam-pinos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unidade 1 · Objetos que controlam pinos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unidade-2-perto-do-metal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unidade 2 · Perto do metal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unidade-3-comportamento-e-tempo-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unidade 3 · Comportamento e tempo real
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unidade-4-concorrencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unidade 4 · Concorrência
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unidade-5-robustez-e-conexao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unidade 5 · Robustez e conexão
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quando-o-padrao-faltou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quando o padrão faltou
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quando o padrão faltou">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ariane-5-voo-501-1996-tipos-e-smart-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ariane 5, voo 501 (1996): tipos e Smart Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#therac-25-19851987-contadores-e-condicoes-de-corrida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Therac-25 (1985–1987): contadores e condições de corrida
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mars-pathfinder-1997-inversao-de-prioridade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mars Pathfinder (1997): inversão de prioridade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toyota-aceleracao-nao-intencional-processos-de-2013-o-watchdog-que-nao-via-tudo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Toyota, aceleração não intencional (processos de 2013): o watchdog que não via tudo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#para-ir-alem-ler-codigo-de-verdade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Para ir além: ler código de verdade
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="os-padroes-no-mundo-real">Os padrões no mundo real<a class="headerlink" href="#os-padroes-no-mundo-real" title="Permanent link">&para;</a></h1>
+<p>Os padrões do curso não foram inventados para a disciplina. Cada um tem nome porque aparece, de novo e de novo, em firmware de verdade: no core do ESP32 que você usa toda aula, em pilotos automáticos de drone, em sistemas operacionais de tempo real e no núcleo do Linux. Esta página mostra <strong>onde</strong>, padrão por padrão, na ordem dos capítulos.</p>
+<p>Também há a outra face: acidentes famosos em que o padrão <strong>faltou</strong>. Eles estão no fim, e cada um diz qual capítulo teria ajudado.</p>
+<div class="admonition tip">
+<p class="admonition-title">Como usar esta página</p>
+<p>Não é para ler de uma vez. Volte aqui ao terminar cada capítulo e procure a linha dele. Quando a aplicação é um projeto aberto, a tabela diz <strong>o nome do arquivo ou da função</strong>, para você abrir o código e reconhecer o padrão com os próprios olhos. Ler código alheio e dizer "isto é um Hardware Proxy" é uma habilidade que o mercado cobra.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Os projetos citados</p>
+<ul>
+<li><strong>Core Arduino-ESP32</strong>: o mesmo do Wokwi (versão 3.3.12), instalado na sua máquina pelo PlatformIO. Tudo o que esta página diz dele foi conferido nos arquivos dessa versão.</li>
+<li><strong><a href="https://docs.espressif.com/projects/esp-idf/en/latest/esp32/">ESP-IDF</a></strong>: o framework da Espressif sobre o qual o core Arduino é construído.</li>
+<li><strong><a href="https://ardupilot.org/">ArduPilot</a></strong> e <strong><a href="https://px4.io/">PX4</a></strong>: pilotos automáticos abertos de drones, aviões, barcos e robôs terrestres, escritos em C++.</li>
+<li><strong><a href="https://zephyrproject.org/">Zephyr</a></strong>: RTOS aberto da Linux Foundation, usado por Nordic, NXP, Intel e outros.</li>
+<li><strong><a href="https://marlinfw.org/">Marlin</a></strong>: o firmware da maioria das impressoras 3D de hobby.</li>
+<li><strong>Linux</strong>: o núcleo, que também roda em muito produto embarcado (roteadores, TVs, carros).</li>
+</ul>
+</div>
+<h2 id="unidade-1-objetos-que-controlam-pinos">Unidade 1 · Objetos que controlam pinos<a class="headerlink" href="#unidade-1-objetos-que-controlam-pinos" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Padrão (cap.)</th>
+<th>Onde aparece</th>
+<th>O que reconhecer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hardware Proxy simples</strong> (1)</td>
+<td>Toda classe de biblioteca Arduino: <code>HardwareSerial</code>, <code>TwoWire</code> (o <code>Wire</code>), <code>Servo</code></td>
+<td>o resto do programa chama métodos (<code>Serial.print</code>, <code>Wire.write</code>); só a classe sabe qual periférico e quais pinos ela usa</td>
+</tr>
+<tr>
+<td><strong>Inicialização em duas fases</strong> (1)</td>
+<td><code>Serial.begin(115200)</code>, <code>Wire.begin()</code>, <code>display.begin()</code> de quase toda biblioteca de sensor</td>
+<td>o objeto é global, construído antes do <code>setup()</code>; quem mexe no hardware é o <code>begin()</code>. No core 3.3.12, é o <code>TwoWire::begin()</code> que cria o mutex do barramento (<code>Wire.cpp</code>), não o construtor. É a regra "construtor guarda, <code>inicia()</code> mexe" com outro nome</td>
+</tr>
+<tr>
+<td><strong>Superloop cooperativo</strong> (3)</td>
+<td>O próprio <code>main.cpp</code> do core ESP32: uma tarefa do FreeRTOS chamada <code>loopTask</code> com um <code>for (;;)</code> que chama o seu <code>loop()</code></td>
+<td>o <code>loop()</code> que você escreve é só o corpo do laço. Se ele travar, nada mais roda nessa tarefa (é por isso que existe o watchdog do capítulo 18)</td>
+</tr>
+<tr>
+<td><strong>Composição</strong> (3)</td>
+<td>Marlin: o objeto <code>planner</code> (planejamento de movimento) e o <code>stepper</code> (geração dos pulsos dos motores) são peças separadas que o laço principal coordena</td>
+<td>cada peça tem uma responsabilidade; o todo nasce de juntar as peças, não de herdar delas</td>
+</tr>
+<tr>
+<td><strong>Máquina de estados com <code>switch</code></strong> (4)</td>
+<td>Parser do <a href="https://mavlink.io/en/mavgen_c/">MAVLink</a>, o protocolo de telemetria de drones: <code>mavlink_parse_char()</code> recebe <strong>um byte por vez</strong> e avança um estado (espera início, comprimento, sequência, …, checksum)</td>
+<td>a mesma estrutura do <code>BotaoFiltrado</code>: um <code>enum</code> de estados, um <code>switch</code>, e a função é chamada de novo a cada evento</td>
+</tr>
+<tr>
+<td><strong>Debouncing</strong> (4)</td>
+<td>Linux, driver <code>gpio-keys</code>: o <em>device tree</em> de cada placa declara <code>debounce-interval</code> por botão, em milissegundos, com <strong>5 ms</strong> de padrão (<a href="https://www.kernel.org/doc/Documentation/devicetree/bindings/input/gpio-keys.yaml">binding no kernel.org</a>)</td>
+<td>o quique é tão universal que o núcleo do Linux trata isso como configuração, não como código de cada produto</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unidade-2-perto-do-metal">Unidade 2 · Perto do metal<a class="headerlink" href="#unidade-2-perto-do-metal" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Padrão (cap.)</th>
+<th>Onde aparece</th>
+<th>O que reconhecer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Registrador tipado</strong> (5)</td>
+<td><strong>CMSIS</strong>, o padrão da ARM para todos os Cortex-M (STM32, NXP, Nordic…): cada periférico vira um <code>struct</code> (<code>GPIO_TypeDef</code>) com um campo por registrador, e o tipo de cada campo é <code>__IO uint32_t</code>, uma macro que vira <code>volatile uint32_t</code></td>
+<td>um nome por registrador em vez de um endereço solto; o compilador confere o tipo. Em Rust, as <em>crates</em> de periférico (<code>esp32</code> no docs.rs) levam a mesma ideia mais longe: cada campo de bit tem um método próprio</td>
+</tr>
+<tr>
+<td><strong>Hardware Proxy sobre registrador</strong> (6)</td>
+<td>ESP-IDF, <code>soc/gpio_struct.h</code>: os registradores de GPIO do ESP32 descritos como <code>typedef volatile struct gpio_dev_s { … out_w1ts; out_w1tc; … }</code>, com um objeto global <code>GPIO</code></td>
+<td>é o <code>BancoGpio</code> do capítulo 6 feito pelo fabricante: os <strong>mesmos</strong> W1TS e W1TC, nos mesmos endereços</td>
+</tr>
+<tr>
+<td>idem</td>
+<td>O seu <code>digitalWrite()</code>: no core 3.3.12 ele chama <code>gpio_set_level()</code>, que desce até <code>gpio_ll_set_level()</code> (arquivo <code>hal/gpio_ll.h</code>), onde está, para pinos abaixo de 32, a linha <code>hw-&gt;out_w1ts = 1 &lt;&lt; gpio_num</code></td>
+<td>as camadas que o capítulo 6 mediu (7954 ns contra 307 ns no Wokwi) são estas: a conferência do pino e as chamadas até chegar à escrita que o <code>LedRapido</code> faz direto. Os pinos 32 a 39 vão para <code>out1_w1ts</code>, o segundo banco</td>
+</tr>
+<tr>
+<td><strong>Hardware Adapter / sensor inteligente</strong> (7)</td>
+<td>Zephyr, API de sensores: todo sensor (temperatura, acelerômetro, pressão) responde às mesmas duas chamadas, <code>sensor_sample_fetch()</code> e <code>sensor_channel_get()</code> (<a href="https://docs.zephyrproject.org/latest/hardware/peripherals/sensor/index.html">documentação</a>)</td>
+<td>o programa pede "a temperatura" na mesma unidade, seja qual for o chip. A conversão de bits crus para grandeza física fica dentro do driver</td>
+</tr>
+<tr>
+<td><strong>Interface e injeção de dependência</strong> (8)</td>
+<td>O próprio core Arduino: <code>Print</code> tem um único método obrigatório, <code>virtual size_t write(uint8_t) = 0</code>, e <code>Stream</code> herda dele. <code>HardwareSerial</code> e o cliente de rede (<code>Client</code>, base do <code>NetworkClient</code>) são ambos <code>Stream</code></td>
+<td>uma função que recebe <code>Stream&amp;</code> funciona igual com a serial e com uma conexão TCP. Quem escolhe é quem chama: injeção de dependência</td>
+</tr>
+<tr>
+<td>idem, em C</td>
+<td>Zephyr: cada tipo de driver é um <code>struct</code> de <strong>ponteiros para função</strong> (<code>struct sensor_driver_api</code> com <code>sample_fetch</code>, <code>channel_get</code>…), e as funções públicas chamam por <code>dev-&gt;api</code></td>
+<td>é uma tabela virtual escrita à mão. O <code>virtual</code> do C++ faz exatamente isso por você</td>
+</tr>
+<tr>
+<td><strong>Dublês de teste</strong> (8)</td>
+<td>Zephyr adotou o <a href="https://docs.zephyrproject.org/latest/doxygen/html/group__fff__extensions.html">FFF (Fake Function Framework)</a> para substituir funções de hardware nos testes; o firmware do controlador embarcado dos Chromebooks (Chromium EC) o usa em seus testes sobre Zephyr</td>
+<td>a mesma ideia do <code>arduino_falso.h</code>: trocar o hardware por uma versão que o teste controla e inspeciona</td>
+</tr>
+<tr>
+<td><strong>Interrupção com trabalho diferido</strong> (9)</td>
+<td>Zephyr: a ISR só chama <code>k_work_submit()</code>, e o trabalho pesado roda depois numa <em>workqueue</em>, em contexto de thread (<a href="https://docs.zephyrproject.org/latest/kernel/services/threads/workqueue.html">documentação</a>). No core ESP32, <code>attachInterrupt()</code> registra a sua função atrás de um tratador marcado <code>ARDUINO_ISR_ATTR</code> (que vira <code>IRAM_ATTR</code>)</td>
+<td>ISR curta, trabalho longo fora dela. A flag <code>volatile bool</code> do capítulo 9 é a versão mínima disso</td>
+</tr>
+<tr>
+<td><strong>Polling × interrupção</strong> (9)</td>
+<td>Linux, <strong>NAPI</strong> (rede): a placa de rede interrompe no primeiro pacote; sob tráfego alto, o driver <strong>desliga</strong> a interrupção e passa a ler a fila por polling, até a carga cair (<a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/10/html/network_troubleshooting_and_performance_tuning/tuning-irq-balancing">Red Hat, ajuste de rede</a>)</td>
+<td>nenhum dos dois ganha sempre: interrupção é barata com pouco evento, polling é barato com muito. Sistemas sérios trocam entre eles em tempo de execução</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unidade-3-comportamento-e-tempo-real">Unidade 3 · Comportamento e tempo real<a class="headerlink" href="#unidade-3-comportamento-e-tempo-real" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Padrão (cap.)</th>
+<th>Onde aparece</th>
+<th>O que reconhecer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Alocação estática</strong> (10)</td>
+<td>FreeRTOS: <code>xTaskCreateStatic()</code> e as outras funções <code>…Static</code>. Com <code>configSUPPORT_DYNAMIC_ALLOCATION</code> em 0, o kernel compila <strong>sem heap nenhum</strong> (<a href="https://freertos.org/Documentation/02-Kernel/02-Kernel-features/09-Memory-management/04-Static-allocation-demo">FreeRTOS, alocação estática</a>)</td>
+<td>a memória de cada tarefa e fila é um array declarado pelo programador; o <em>linker</em> diz, antes de gravar a placa, quanto de RAM o sistema usa</td>
+</tr>
+<tr>
+<td>idem, como regra</td>
+<td>NASA/JPL, <em>The Power of 10</em> (Holzmann, 2006): a regra 3 proíbe alocação dinâmica depois da inicialização</td>
+<td>é literalmente a convenção do curso ("sem heap depois do <code>setup()</code>"), escrita para software de sondas espaciais</td>
+</tr>
+<tr>
+<td><strong>Command</strong> (10)</td>
+<td>Marlin: cada linha de G-code (<code>G1 X10 Y20</code>, <code>M104 S200</code>) vira um comando numa fila circular de tamanho fixo (<code>queue.h</code>), e o laço principal despacha um por vez em <code>GcodeSuite::process_parsed_command()</code></td>
+<td>o pedido vira <strong>dado</strong> (cabe numa fila, pode esperar, pode vir da serial ou do cartão SD) e só depois é executado</td>
+</tr>
+<tr>
+<td><strong>Observer</strong> (11)</td>
+<td>Zephyr, <strong>zbus</strong>: canais de mensagem com observadores do tipo <em>listener</em> (uma função chamada a cada publicação) e <em>subscriber</em> (uma thread avisada) (<a href="https://docs.zephyrproject.org/latest/services/zbus/index.html">documentação</a>)</td>
+<td>quem publica não conhece quem escuta. Os observadores são declarados em tempo de compilação, com macros (<code>ZBUS_LISTENER_DEFINE</code>): Observer sem heap, como no capítulo 11</td>
+</tr>
+<tr>
+<td><strong>Strategy</strong> (11)</td>
+<td>O mesmo <code>Stream&amp;</code> da Unidade 2: um registrador de eventos que recebe "para onde mandar os bytes" pode gravar na serial hoje e na rede amanhã, sem mudar uma linha dele</td>
+<td>o algoritmo que varia (aqui, o destino) fica atrás de uma interface e é trocado de fora</td>
+</tr>
+<tr>
+<td><strong>Cyclic Executive</strong> (12)</td>
+<td>ArduPilot, <code>AP_Scheduler</code>: uma <strong>tabela</strong> de tarefas em que cada linha diz a função, quantas vezes por segundo ela roda (em Hz) e quantos microssegundos ela pode gastar. O laço principal do Copter roda tipicamente a 400 Hz (<a href="https://ardupilot.org/dev/docs/code-overview-scheduling-your-new-code-to-run-intermittently.html">documentação do ArduPilot</a>)</td>
+<td>é o executivo cíclico do capítulo 12 num piloto automático que voa de verdade, com orçamento de tempo por tarefa e contagem de estouros</td>
+</tr>
+<tr>
+<td><strong>Static Priority e tarefa periódica</strong> (13)</td>
+<td>O próprio core ESP32: o seu <code>setup()</code> e o seu <code>loop()</code> rodam numa tarefa do FreeRTOS (<code>loopTask</code>), ao lado das tarefas do sistema (Wi-Fi, <em>timers</em>, ociosa). Se você registra <code>Serial.onReceive()</code>, o <code>HardwareSerial</code> cria mais uma, a <code>uart_event_task</code>, com prioridade própria (<code>ARDUINO_SERIAL_EVENT_TASK_PRIORITY</code>)</td>
+<td>você já roda um sistema com várias tarefas de prioridades diferentes desde o capítulo 1; o capítulo 13 só torna isso visível</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unidade-4-concorrencia">Unidade 4 · Concorrência<a class="headerlink" href="#unidade-4-concorrencia" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Padrão (cap.)</th>
+<th>Onde aparece</th>
+<th>O que reconhecer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Queuing e ISR diferida</strong> (14)</td>
+<td><code>HardwareSerial::_uartEventTask()</code> (core 3.3.12), a tarefa que existe quando há <code>onReceive()</code>: ela fica bloqueada num <code>xQueueReceive(…, portMAX_DELAY)</code>; o driver da UART, a partir da interrupção, põe eventos nessa fila (dado chegou, FIFO estourou, <em>break</em>), e a tarefa os trata num <code>switch</code></td>
+<td>ISR produz, tarefa consome, fila no meio. A tarefa não gasta CPU enquanto espera</td>
+</tr>
+<tr>
+<td><strong>Guarded Call</strong> (15)</td>
+<td><code>TwoWire</code> (o <code>Wire</code>): <code>beginTransmission()</code> toma um mutex do FreeRTOS (<code>xSemaphoreTake(lock, portMAX_DELAY)</code>) e só o devolve no fim da transação. Duas tarefas que usam o I2C ao mesmo tempo não embaralham os bytes</td>
+<td>o acesso ao recurso compartilhado passa por uma porta com tranca. Note que a trava atravessa <strong>várias</strong> chamadas (<code>begin…</code>, <code>write</code>, <code>end…</code>): é por isso que o RAII do capítulo 15 (<code>Trava</code>) é mais seguro do que lembrar de destravar</td>
+</tr>
+<tr>
+<td><strong>Critical Region</strong> (15)</td>
+<td>ESP-IDF, <code>portENTER_CRITICAL(&amp;mux)</code>: no ESP32 de dois núcleos, a região crítica precisa de um <em>spinlock</em>, porque desligar as interrupções de um núcleo não para o outro. O core usa as variantes <code>…_ISR</code> e <code>…_SAFE</code> no <code>HWCDC.cpp</code></td>
+<td>a versão "desliga tudo" do capítulo 15, com a complicação real de um chip com dois processadores</td>
+</tr>
+<tr>
+<td><strong>Active Object</strong> (16)</td>
+<td>Framework <strong>QP</strong> (Quantum Leaps, de Miro Samek, autor do padrão): cada objeto ativo tem sua thread, sua fila de eventos e uma máquina de estados; objetos só conversam por eventos assíncronos. Roda sem RTOS ou sobre FreeRTOS, ThreadX e Linux (<a href="https://github.com/QuantumLeaps">QP no GitHub</a>)</td>
+<td>ninguém chama método de outro objeto ativo; manda uma mensagem e segue. A <code>uart_event_task</code> do core é um parente próximo</td>
+</tr>
+<tr>
+<td><strong>State (uma classe por estado)</strong> (16)</td>
+<td>ArduPilot Copter: cada modo de voo é uma classe derivada de <code>Mode</code> (<code>ModeStabilize</code>, <code>ModeLoiter</code>, <code>ModeRTL</code>…), e criar um modo novo é escrever uma subclasse com <code>run()</code>, <code>name()</code> e, se preciso, <code>init()</code> (<a href="https://ardupilot.org/dev/docs/apmcopter-adding-a-new-flight-mode.html">guia do ArduPilot</a>)</td>
+<td>trocar de modo de voo é trocar o objeto para o qual o controlador aponta. O Copter tem mais de 20 modos; um <code>switch</code> com todos eles seria ilegível</td>
+</tr>
+<tr>
+<td><strong>Máquina hierárquica</strong> (16)</td>
+<td>Zephyr, <strong>SMF</strong> (<em>State Machine Framework</em>): com <code>CONFIG_SMF_ANCESTOR_SUPPORT</code>, estados têm pais e seguem as regras de transição da UML. A amostra oficial <code>hsm_psicc2</code> reproduz o exemplo do livro do Samek (<a href="https://docs.zephyrproject.org/latest/services/smf/index.html">documentação</a>)</td>
+<td>o evento que o estado filho não trata sobe para o pai. É o que permite escrever "em qualquer estado, o botão de emergência desliga tudo" uma vez só</td>
+</tr>
+<tr>
+<td><strong>Adapter de display e Template Method</strong> (17)</td>
+<td>Adafruit GFX: a classe base só exige <code>drawPixel()</code> (virtual puro); linhas, retângulos, círculos e texto são escritos <strong>em cima</strong> dele. Cada display (SSD1306, ST7735, ILI9341…) é uma subclasse que implementa <code>drawPixel()</code> para o seu chip</td>
+<td>o algoritmo geral (desenhar uma linha) fica na base; o passo que varia (acender um pixel neste chip) fica na derivada</td>
+</tr>
+<tr>
+<td><strong>Dono do barramento × Guarded Call</strong> (17)</td>
+<td>O <code>Wire</code> acima escolheu Guarded Call. A alternativa, uma única tarefa dona do I2C que recebe pedidos por fila, é a forma Active Object</td>
+<td>os dois resolvem o mesmo problema; o capítulo 17 compara custo e risco de cada um</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unidade-5-robustez-e-conexao">Unidade 5 · Robustez e conexão<a class="headerlink" href="#unidade-5-robustez-e-conexao" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Padrão (cap.)</th>
+<th>Onde aparece</th>
+<th>O que reconhecer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Watchdog</strong> (18)</td>
+<td>ESP-IDF, <em>Task Watchdog</em> (TWDT): cada tarefa inscrita com <code>esp_task_wdt_add()</code> precisa chamar <code>esp_task_wdt_reset()</code> antes do prazo (<a href="https://docs.espressif.com/projects/esp-idf/en/v5.1/api-reference/system/wdts.html">documentação</a>). No core 3.3.12, o laço da <code>loopTask</code> chama <code>esp_task_wdt_reset()</code> antes de cada <code>loop()</code> quando você liga <code>enableLoopWDT()</code>; a configuração dessa versão usa prazo de <strong>5 s</strong> e reinicia a placa ao estourar</td>
+<td>um <code>loop()</code> preso não alimenta o cão, e a placa reinicia sozinha. Repare que o watchdog vigia <strong>cada tarefa</strong>, não a CPU como um todo: veja o caso Toyota abaixo</td>
+</tr>
+<tr>
+<td><strong>Modo degradado</strong> (18)</td>
+<td>ArduPilot e PX4: <em>failsafes</em> configuráveis. Se o rádio cai, a bateria acaba ou o GPS some, o veículo troca sozinho para um modo mais seguro (voltar para casa, pousar, parar)</td>
+<td>falhar não é desligar: é passar a um estado que ainda protege as pessoas em volta</td>
+</tr>
+<tr>
+<td><strong>Publish-subscribe</strong> (19)</td>
+<td>PX4, <strong>uORB</strong>: toda a comunicação interna do piloto (sensores, estimador, controlador) é publicação e assinatura de tópicos, e cada mensagem é obrigada a ter um <code>timestamp</code> (<a href="https://docs.px4.io/main/en/middleware/uorb.html">documentação</a>). Pela rede, o equivalente é o <strong>MQTT</strong>, que o ESP-IDF traz pronto (<code>esp-mqtt</code>)</td>
+<td>o carimbo de tempo é <em>Smart Data</em>: o dado diz quando foi medido, e quem o recebe decide se ainda serve</td>
+</tr>
+<tr>
+<td><strong>Máquina de reconexão</strong> (19)</td>
+<td><code>esp-mqtt</code>: quando a conexão cai, o cliente gera <code>MQTT_EVENT_DISCONNECTED</code> e, por padrão, tenta reconectar sozinho (desligável com <code>disable_auto_reconnect</code>) (<a href="https://docs.espressif.com/projects/esp-idf/en/v5.1.1/esp32/api-reference/protocols/mqtt.html">documentação</a>)</td>
+<td>a rede cair é o caso normal, não a exceção. O capítulo 19 escreve essa máquina de estados à mão para você ver o que a biblioteca esconde</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quando-o-padrao-faltou">Quando o padrão faltou<a class="headerlink" href="#quando-o-padrao-faltou" title="Permanent link">&para;</a></h2>
+<p>Quatro casos estudados em cursos de engenharia de software do mundo todo. Todos têm relatório público. Em cada um, a falha técnica é algo que este curso ensina a evitar.</p>
+<h3 id="ariane-5-voo-501-1996-tipos-e-smart-data">Ariane 5, voo 501 (1996): tipos e <em>Smart Data</em><a class="headerlink" href="#ariane-5-voo-501-1996-tipos-e-smart-data" title="Permanent link">&para;</a></h3>
+<p>O foguete se autodestruiu 37 segundos após o lançamento. Segundo o <a href="https://www.esa.int/Newsroom/Press_Releases/Ariane_501_-_Presentation_of_Inquiry_Board_report">relatório da comissão de inquérito</a>, o software do sistema de referência inercial converteu um valor de <strong>ponto flutuante de 64 bits</strong> para um <strong>inteiro com sinal de 16 bits</strong>, e o valor não cabia. A conversão não tinha proteção: o código vinha do Ariane 4, cuja trajetória nunca gerava números tão grandes. O processador parou com erro.</p>
+<p>Havia um sistema reserva, mas ele rodava <strong>o mesmo software</strong> e tinha parado pela mesma razão, um ciclo antes (72 ms). Redundância de hardware não protege contra erro de projeto.</p>
+<ul>
+<li><strong>Capítulo 5:</strong> a faixa de um <code>int16_t</code> é de −32768 a 32767, e converter para um tipo menor sem conferir é perder bits.</li>
+<li><strong>Capítulo 18:</strong> <em>Smart Data</em> é o dado que confere a própria faixa antes de ser usado.</li>
+</ul>
+<h3 id="therac-25-19851987-contadores-e-condicoes-de-corrida">Therac-25 (1985–1987): contadores e condições de corrida<a class="headerlink" href="#therac-25-19851987-contadores-e-condicoes-de-corrida" title="Permanent link">&para;</a></h3>
+<p>O Therac-25 era um aparelho de radioterapia. Ele aplicou doses muitas vezes maiores que a prescrita em seis acidentes, com mortes. A análise clássica é de <a href="https://www.se.rit.edu/~swen-342/resources/Leveson,%20Turner%20-%20An%20Investigation%20of%20the%20Therac-25%20Accidents%20-%20IEEE%20Computer%20v26n7%20-%201993-07.pdf">Leveson e Turner (IEEE Computer, 1993)</a>.</p>
+<p>Duas falhas de software se destacam:</p>
+<ul>
+<li><strong>Uma variável de um byte</strong> era <em>incrementada</em>, em vez de receber um valor fixo, para indicar que uma verificação era necessária. A cada 256 vezes ela voltava a zero, e o zero significava "não verificar".</li>
+<li><strong>Uma condição de corrida</strong> entre a tarefa que lia o teclado do operador e a que configurava o aparelho: um operador rápido conseguia mudar o modo antes de o hardware se reposicionar.</li>
+</ul>
+<p>O modelo anterior, Therac-20, tinha travas físicas de segurança. O Therac-25 confiou só no software.</p>
+<ul>
+<li><strong>Capítulo 5:</strong> um <code>uint8_t</code> dá a volta em 255 + 1, e a volta é silenciosa.</li>
+<li><strong>Capítulo 15:</strong> dados compartilhados entre tarefas precisam de Critical Region ou Guarded Call.</li>
+</ul>
+<h3 id="mars-pathfinder-1997-inversao-de-prioridade">Mars Pathfinder (1997): inversão de prioridade<a class="headerlink" href="#mars-pathfinder-1997-inversao-de-prioridade" title="Permanent link">&para;</a></h3>
+<p>Dias depois de pousar em Marte, a sonda começou a <strong>reiniciar sozinha</strong>. O relato do <a href="https://www.cs.cornell.edu/courses/cs614/1999sp/papers/pathfinder2.html">líder do software, Glenn Reeves</a>, explica a causa.</p>
+<ol>
+<li>Uma tarefa de baixa prioridade (meteorologia) segurava um mutex do barramento de dados.</li>
+<li>Tarefas de prioridade média a interrompiam e a impediam de terminar.</li>
+<li>A tarefa de alta prioridade, que precisava do mutex, ficava esperando.</li>
+<li>O <strong>watchdog</strong> percebia o atraso e reiniciava tudo.</li>
+</ol>
+<p>O mutex do VxWorks tinha uma opção de <strong>herança de prioridade</strong>, que resolveria o problema, mas ela estava desligada. A equipe reproduziu a falha numa réplica em Terra e enviou à sonda uma correção que ligou a opção.</p>
+<ul>
+<li><strong>Capítulos 13 e 15:</strong> prioridade fixa, mutex e o motivo de o FreeRTOS dar herança de prioridade a todo mutex criado com <code>xSemaphoreCreateMutex</code>. Isso inclui o do <code>Wire</code>.</li>
+<li><strong>Capítulo 18:</strong> o watchdog não resolveu o problema, mas impediu que a sonda ficasse travada para sempre e deixou o sintoma visível.</li>
+</ul>
+<h3 id="toyota-aceleracao-nao-intencional-processos-de-2013-o-watchdog-que-nao-via-tudo">Toyota, aceleração não intencional (processos de 2013): o watchdog que não via tudo<a class="headerlink" href="#toyota-aceleracao-nao-intencional-processos-de-2013-o-watchdog-que-nao-via-tudo" title="Permanent link">&para;</a></h3>
+<p>Em processos judiciais nos EUA, peritos analisaram o software do controle eletrônico de aceleração de alguns modelos Toyota. Um deles foi <a href="https://users.ece.cmu.edu/~koopman/toyota/index.html">Philip Koopman, da Carnegie Mellon</a>. Segundo ele, o watchdog <strong>monitorava a carga média da CPU</strong> e não conseguia detectar a morte de certas tarefas.</p>
+<p>Uma tarefa importante podia parar enquanto o resto do sistema seguia, e o watchdog continuava sendo alimentado. É a posição dos peritos da acusação: a Toyota nega que defeitos de software tenham causado acidentes, e uma análise anterior da NASA para o governo americano não encontrou causa eletrônica.</p>
+<ul>
+<li><strong>Capítulo 18:</strong> cada tarefa que importa precisa provar que está viva. É exatamente por isso que o TWDT do ESP-IDF inscreve <strong>tarefas</strong>, e não o processador.</li>
+</ul>
+<h2 id="para-ir-alem-ler-codigo-de-verdade">Para ir além: ler código de verdade<a class="headerlink" href="#para-ir-alem-ler-codigo-de-verdade" title="Permanent link">&para;</a></h2>
+<p>Três leituras curtas, na ordem do curso, todas já instaladas na sua máquina pelo PlatformIO, na pasta <code>~/.platformio/packages/</code>:</p>
+<ol>
+<li><strong>Depois do capítulo 6:</strong> abra <code>framework-arduinoespressif32/cores/esp32/esp32-hal-gpio.c</code> e siga o <code>digitalWrite</code> até a escrita em <code>out_w1ts</code>. Conte as camadas.</li>
+<li><strong>Depois do capítulo 14:</strong> em <code>framework-arduinoespressif32/cores/esp32/HardwareSerial.cpp</code>, leia <code>_uartEventTask</code>. Identifique o produtor, a fila e o consumidor.</li>
+<li><strong>Depois do capítulo 15:</strong> em <code>framework-arduinoespressif32/libraries/Wire/src/Wire.cpp</code>, leia <code>TwoWire::begin(int sdaPin, …)</code>. Ela toma a trava no começo e tem vários jeitos de falhar no meio, e todos terminam num <code>goto end</code>, logo antes do <code>xSemaphoreGive(lock)</code>. Esse <code>goto</code> é o jeito do C de garantir que a trava volte em todo caminho. Reescreva a função de cabeça com a classe <code>Trava</code> do capítulo 15: o que acontece com os <code>goto</code>?</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.indexes", "content.code.copy", "content.code.annotate", "content.tabs.link", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
