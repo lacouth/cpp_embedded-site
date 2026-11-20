@@ -704,7 +704,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
     
@@ -721,7 +721,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
           </label>
@@ -864,7 +864,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
     
@@ -881,7 +881,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
           </label>
@@ -933,7 +933,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
     
@@ -950,7 +950,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
           </label>
@@ -1093,7 +1093,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
     
@@ -1110,7 +1110,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
           </label>
@@ -1660,6 +1660,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#padroes-de-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Padrões de projeto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#teoria-de-tempo-real" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1761,6 +1772,17 @@
     <span class="md-ellipsis">
       
         Livros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#padroes-de-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Padrões de projeto
       
     </span>
   </a>
@@ -1890,11 +1912,17 @@
 <p><strong>Elecia White, <em>Making Embedded Systems</em>, 2ª edição (O'Reilly, 2024)</strong> — o melhor panorama de como se projeta software embarcado: máquinas de estados, camadas de abstração de hardware, testes, depuração, IoT. Linguagem acessível, muitos exemplos. Complementa as Unidades 1 e 2 e ajuda muito no projeto.</p>
 <p><strong>James W. Grenning, <em>Test-Driven Development for Embedded C</em> (Pragmatic Bookshelf, 2011)</strong> — o livro que popularizou testar firmware no computador, com implementações falsas do hardware. Os exemplos são em C, mas a técnica é exatamente a do capítulo 8 e do <code>arduino_falso.h</code>.</p>
 <p><strong>Christopher Kormanyos, <em>Real-Time C++</em>, 4ª edição (Springer, 2021)</strong> — C++ moderno aplicado a microcontroladores: classes para periféricos, registradores, templates, sem heap. É mais denso que os anteriores; use-o como segunda leitura da Unidade 2, depois do capítulo correspondente.</p>
+<h2 id="padroes-de-projeto">Padrões de projeto<a class="headerlink" href="#padroes-de-projeto" title="Permanent link">&para;</a></h2>
+<p><strong>Bruce Powel Douglass, <em>Design Patterns for Embedded Systems in C</em> (Newnes/Elsevier, 2011)</strong> — o catálogo de padrões feito para firmware: acesso ao hardware (Hardware Proxy, Adapter, Debouncing, Interrupt, Polling), concorrência (Cyclic Executive, Static Priority, Guarded Call, Queuing), máquinas de estados e <em>safety</em>. Os exemplos são em C, mas cada padrão vira uma classe com naturalidade. É o livro-texto dos padrões das Unidades 2 a 5.</p>
+<p><strong>Erich Gamma, Richard Helm, Ralph Johnson e John Vlissides, <em>Padrões de Projeto</em> (Bookman, 2000; original de 1994)</strong> — o livro que deu nome aos padrões, conhecido como "GoF". O curso usa só alguns (Adapter, Observer, Strategy, Command, State, Template Method), sempre na versão sem alocação dinâmica. Bom para consultar a intenção original de cada um.</p>
+<p><strong>Miro Samek, <em>Practical UML Statecharts in C/C++</em>, 2ª edição (Newnes, 2008)</strong> — máquinas de estados hierárquicas e o padrão <strong>Active Object</strong>, a base do framework QP. É a referência do capítulo 16. O autor mantém uma série de vídeos gratuita, <em>Modern Embedded Systems Programming</em>, em <a href="https://www.state-machine.com/video-course">state-machine.com</a>.</p>
+<p><strong>Philip Koopman, <em>Better Embedded System Software</em> (Drumnadrochit, 2010)</strong> — práticas de engenharia de software embarcado vindas da indústria e da disciplina 18-642 da Carnegie Mellon: variáveis globais, testes, watchdog, <em>safety</em>. Apoio do capítulo 18 e do projeto.</p>
+<p><strong>Edward A. Lee e Sanjit A. Seshia, <em>Introduction to Embedded Systems: A Cyber-Physical Systems Approach</em></strong> (<strong>gratuito</strong>, <a href="https://leeseshia.org/">leeseshia.org</a>) — o livro da disciplina EECS 149 de Berkeley. Os capítulos de máquinas de estados, composição e concorrência são uma segunda leitura, mais formal, para as Unidades 3 e 4.</p>
 <h2 id="teoria-de-tempo-real">Teoria de tempo real<a class="headerlink" href="#teoria-de-tempo-real" title="Permanent link">&para;</a></h2>
-<p><strong>Jean-Marie Farines, Joni da Silva Fraga e Rômulo Silva de Oliveira, <em>Sistemas de Tempo Real</em></strong> (DAS/UFSC, 2000) (<strong>gratuito</strong>, <strong>pt-BR</strong>, <a href="https://cin.ufpe.br/~if728/sistemas_tempo_real/livro_farines/">capítulos em PDF</a> na página de uma disciplina da UFPE) — o texto clássico em português sobre o assunto. O capítulo 1 define o que é (e o que não é) tempo real; o capítulo 2, <strong>O Escalonamento de Tempo Real</strong>, traz prioridades fixas, <em>rate monotonic</em> e os testes de escalonabilidade com a profundidade que o capítulo 14 só introduz; o capítulo 3 trata dos sistemas operacionais de tempo real. É a leitura recomendada para as Unidades 3 e 4.</p>
+<p><strong>Jean-Marie Farines, Joni da Silva Fraga e Rômulo Silva de Oliveira, <em>Sistemas de Tempo Real</em></strong> (DAS/UFSC, 2000) (<strong>gratuito</strong>, <strong>pt-BR</strong>, <a href="https://cin.ufpe.br/~if728/sistemas_tempo_real/livro_farines/">capítulos em PDF</a> na página de uma disciplina da UFPE) — o texto clássico em português sobre o assunto. O capítulo 1 define o que é (e o que não é) tempo real; o capítulo 2, <strong>O Escalonamento de Tempo Real</strong>, traz prioridades fixas, <em>rate monotonic</em> e os testes de escalonabilidade com a profundidade que o capítulo 12 só introduz; o capítulo 3 trata dos sistemas operacionais de tempo real. É a leitura recomendada para as Unidades 3 e 4.</p>
 <p><strong>Giorgio Buttazzo, <em>Hard Real-Time Computing Systems</em>, 4ª edição (Springer, 2024)</strong> — a referência internacional de escalonamento de tempo real. Bem mais formal que o resto desta lista: para quem quiser ir além do curso, por exemplo num trabalho de conclusão.</p>
 <h2 id="series-escritas-e-de-video">Séries escritas e de vídeo<a class="headerlink" href="#series-escritas-e-de-video" title="Permanent link">&para;</a></h2>
-<p><strong>DigiKey, <em>Introduction to RTOS</em></strong> (Shawn Hymel, <strong>gratuito</strong>) — doze partes, cada uma com vídeo, texto e um desafio com solução, usando <strong>ESP32 + Arduino + FreeRTOS</strong>, exatamente a combinação do curso. As páginas de solução começam em <a href="https://www.digikey.com/en/maker/projects/introduction-to-rtos-solution-to-part-2-freertos/b3f84c9c9455439ca2dcb8ccfce9dec5">Solution to Part 2</a>, e o código está em <a href="https://github.com/ShawnHymel/introduction-to-rtos">github.com/ShawnHymel/introduction-to-rtos</a>. Ótimo complemento para as Unidades 3 e 4: as partes sobre interrupções, inversão de prioridade e múltiplos núcleos casam com os capítulos 15, 16 e 18.</p>
+<p><strong>DigiKey, <em>Introduction to RTOS</em></strong> (Shawn Hymel, <strong>gratuito</strong>) — doze partes, cada uma com vídeo, texto e um desafio com solução, usando <strong>ESP32 + Arduino + FreeRTOS</strong>, exatamente a combinação do curso. As páginas de solução começam em <a href="https://www.digikey.com/en/maker/projects/introduction-to-rtos-solution-to-part-2-freertos/b3f84c9c9455439ca2dcb8ccfce9dec5">Solution to Part 2</a>, e o código está em <a href="https://github.com/ShawnHymel/introduction-to-rtos">github.com/ShawnHymel/introduction-to-rtos</a>. Ótimo complemento para as Unidades 3 e 4: as partes sobre interrupções, inversão de prioridade e múltiplos núcleos casam com os capítulos 14, 15 e 18.</p>
 <h2 id="em-portugues">Em português<a class="headerlink" href="#em-portugues" title="Permanent link">&para;</a></h2>
 <p><strong><a href="https://lacouth.github.io/cpp_begins-site/">C++ do Zero</a></strong> — o curso anterior a este. Volte nele para classes, referências, RAII e polimorfismo (veja o <a href="../../nivelamento/">Nivelamento</a>).</p>
 <p><strong><a href="https://embarcados.com.br/">Embarcados</a></strong> — portal brasileiro com artigos sobre microcontroladores, ESP32, FreeRTOS e boas práticas de firmware, escritos por profissionais da área. Bom para ver os assuntos do curso aplicados em projetos reais.</p>

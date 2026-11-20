@@ -843,7 +843,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
     
@@ -860,7 +860,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
           </label>
@@ -1003,7 +1003,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
     
@@ -1020,7 +1020,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
           </label>
@@ -1072,7 +1072,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
     
@@ -1089,7 +1089,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
           </label>
@@ -1232,7 +1232,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
     
@@ -1249,7 +1249,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
           </label>
@@ -2147,6 +2147,11 @@
 </code></pre></div>
 <p><code>nome_da_fase()</code> é uma função livre em <code>semaforo.h</code> que converte cada <code>Fase</code> no texto correspondente, com um <code>switch</code>.</p>
 <p>Repare que o <code>loop()</code> é o do capítulo 3: uma lista de <code>atualiza()</code> e de perguntas rápidas. Duas máquinas de estados rodam lado a lado, cada uma no seu ritmo, e uma conversa com a outra por um evento (<code>pede_travessia()</code>). Esse formato aguenta muito mais do que parece. O projeto final de vários grupos vai ser exatamente isso, com mais máquinas.</p>
+<div class="admonition abstract">
+<p class="admonition-title">Padrão de projeto: máquina de estados e Debouncing</p>
+<p>O <code>Semaforo</code> é uma <strong>máquina de estados</strong> na forma mais direta: estados num <code>enum class</code> e regras num <code>switch</code> (no catálogo de Douglass, <em>Single Event Receptor</em>). O <code>BotaoFiltrado</code> é o padrão <strong>Debouncing</strong>, do mesmo catálogo.</p>
+<p>Há outras formas da mesma máquina: uma <strong>tabela de estados</strong> ou o padrão <strong>State</strong>, com uma classe por estado. O capítulo 16 compara as três e chega às máquinas <strong>hierárquicas</strong>, em que um estado contém outros. E o mesmo <code>Semaforo</code> vira um <strong>objeto ativo</strong>, que recebe eventos de outras tarefas.</p>
+</div>
 <h2 id="erros-comuns">Erros comuns<a class="headerlink" href="#erros-comuns" title="Permanent link">&para;</a></h2>
 <p><strong>Esquecer o <code>break</code> num <code>case</code>.</strong> A execução "cai" no <code>case</code> seguinte e faz duas transições numa volta só. Compilando com <code>-Wextra</code> (como fazem o <code>check.sh</code> e o compilador online, se você ligar os avisos), o compilador acusa: <code>this statement may fall through</code>. Leia os avisos.</p>
 <p><strong><code>fase_++</code> para ir à próxima fase.</strong> Não compila com <code>enum class</code>, e é bom que não compile: a ordem das fases é uma regra do sistema, e regra fica escrita no <code>switch</code>.</p>

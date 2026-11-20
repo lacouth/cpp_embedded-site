@@ -706,7 +706,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
     
@@ -723,7 +723,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
           </label>
@@ -866,7 +866,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
     
@@ -883,7 +883,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
           </label>
@@ -935,7 +935,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
     
@@ -952,7 +952,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
           </label>
@@ -1095,7 +1095,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
     
@@ -1112,7 +1112,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
           </label>
@@ -1711,17 +1711,18 @@
 
 <h1 id="projeto-final">Projeto final<a class="headerlink" href="#projeto-final" title="Permanent link">&para;</a></h1>
 <h2 id="peso-e-formato">Peso e formato<a class="headerlink" href="#peso-e-formato" title="Permanent link">&para;</a></h2>
-<p><strong>1/3 da nota final.</strong> Feito em <strong>dupla ou trio</strong>, com <strong>tema livre</strong> dentro dos requisitos abaixo, simulado no Wokwi e <strong>apresentado</strong> para a turma nas semanas 12A e 12B.</p>
+<p><strong>1/3 da nota final.</strong> Feito em <strong>dupla ou trio</strong>, com <strong>tema livre</strong> dentro dos requisitos abaixo, simulado no Wokwi e <strong>apresentado</strong> para a turma nas semanas 14A e 14B.</p>
 <h2 id="requisitos-minimos">Requisitos mínimos<a class="headerlink" href="#requisitos-minimos" title="Permanent link">&para;</a></h2>
 <p>Todo projeto precisa ter:</p>
 <ul>
 <li>[ ] <strong>Pelo menos 3 classes com responsabilidades distintas</strong>, cada uma cuidando de uma coisa (nada de uma classe que faz tudo).</li>
+<li>[ ] <strong>Pelo menos 3 padrões de projeto nomeados e justificados</strong> no README (por exemplo Adapter, Observer, Active Object, Guarded Call, Watchdog): onde cada um está no código e que problema ele resolve ali. Padrão usado sem motivo não conta.</li>
 <li>[ ] <strong>Uma camada de hardware atrás de interfaces</strong> (capítulo 8): pelo menos uma interface com implementação <strong>real</strong> (que usa o hardware) e <strong>falsa</strong> (para testar no computador).</li>
 <li>[ ] <strong>A lógica de decisão testada no host</strong> com <code>assert</code>, sem Wokwi rodando. As regras do sistema (quando ligar, quando alarmar, como filtrar) precisam ter testes, não só o caminho feliz.</li>
-<li>[ ] <strong>Pelo menos 2 tarefas FreeRTOS que se comunicam por uma fila</strong> (capítulos 12, 13 e 15).</li>
-<li>[ ] <strong>Pelo menos 1 tarefa periódica com prazo declarado e jitter medido</strong> (capítulos 11 e 13): o README diz qual é o período, qual é o prazo e qual foi o pior atraso observado no Wokwi.</li>
-<li>[ ] <strong>Prioridades justificadas</strong> (capítulo 14): o README lista as tarefas com período, tempo de execução estimado e prioridade, explica a escolha (<em>rate monotonic</em> ou criticidade) e mostra o <strong>teste de utilização</strong>.</li>
-<li>[ ] <strong>Pelo menos 1 mecanismo de sincronização além da fila</strong>: mutex protegendo um recurso compartilhado, semáforo, ou notificação vinda de uma interrupção (capítulos 9, 15 e 16).</li>
+<li>[ ] <strong>Pelo menos 2 tarefas FreeRTOS que se comunicam por uma fila</strong> (capítulos 13 e 14).</li>
+<li>[ ] <strong>Pelo menos 1 tarefa periódica com prazo declarado e jitter medido</strong> (capítulos 12 e 13): o README diz qual é o período, qual é o prazo e qual foi o pior atraso observado no Wokwi.</li>
+<li>[ ] <strong>Prioridades justificadas</strong> (capítulos 12 e 15): o README lista as tarefas com período, tempo de execução estimado e prioridade, explica a escolha (<em>rate monotonic</em> ou criticidade) e mostra o <strong>teste de utilização</strong>.</li>
+<li>[ ] <strong>Pelo menos 1 mecanismo de sincronização além da fila</strong>: mutex protegendo um recurso compartilhado, semáforo, ou notificação vinda de uma interrupção (capítulos 9, 14 e 15).</li>
 <li>[ ] <strong>Sem alocação dinâmica no caminho periódico</strong>: nada de <code>new</code>, <code>String</code> concatenada ou <code>vector</code> que cresce dentro de tarefas e do <code>loop()</code> (capítulo 10).</li>
 <li>[ ] <strong>README</strong> com: o que o sistema faz, a lista de componentes do Wokwi, um diagrama de blocos das classes e um diagrama das tarefas e filas (pode ser desenho à mão fotografado).</li>
 </ul>
@@ -1737,17 +1738,17 @@
 <tbody>
 <tr>
 <td>Proposta</td>
-<td>Semana 8</td>
-<td>tema, componentes, lista das classes previstas, quais tarefas (com período e prazo) e filas</td>
+<td>Semana 9</td>
+<td>tema, componentes, lista das classes previstas e dos padrões que pretende usar, quais tarefas (com período e prazo) e filas</td>
 </tr>
 <tr>
 <td>Demo parcial</td>
-<td>Semana 11, aula B</td>
+<td>Semana 13, aula B</td>
 <td>a lógica testada no host + pelo menos uma tarefa periódica rodando no Wokwi, com o jitter medido</td>
 </tr>
 <tr>
 <td>Entrega e apresentação</td>
-<td>Semana 12</td>
+<td>Semana 14</td>
 <td>link do projeto no Wokwi, repositório (ou <code>.zip</code>) com código, testes e README, e uma apresentação de ~8 minutos com demonstração ao vivo</td>
 </tr>
 </tbody>
@@ -1766,7 +1767,7 @@
 <td>40%</td>
 </tr>
 <tr>
-<td>Qualidade do design: encapsulamento, interfaces, uso de memória, escolha de prioridades e prazos</td>
+<td>Qualidade do design: padrões bem escolhidos, encapsulamento, interfaces, uso de memória, escolha de prioridades e prazos</td>
 <td>25%</td>
 </tr>
 <tr>

@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#unidade-4-escalonamento-e-sincronizacao" class="md-skip">
+        <a href="#unidade-4-padroes-de-concorrencia" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -706,7 +706,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
     
@@ -723,7 +723,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
           </label>
@@ -866,7 +866,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
     
@@ -883,7 +883,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
           </label>
@@ -937,7 +937,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
     
@@ -954,7 +954,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
           </label>
@@ -1097,7 +1097,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
     
@@ -1114,7 +1114,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
           </label>
@@ -1646,8 +1646,8 @@
   
 
 
-<h1 id="unidade-4-escalonamento-e-sincronizacao">Unidade 4 · Escalonamento e sincronização<a class="headerlink" href="#unidade-4-escalonamento-e-sincronizacao" title="Permanent link">&para;</a></h1>
-<p>Semanas 8 e 9. Com várias tarefas no ar, duas perguntas mandam no projeto: <strong>todas vão cumprir os prazos?</strong> (escalonamento) e <strong>como trocam dados sem se atrapalhar?</strong> (sincronização). A unidade responde as duas, e fecha usando um barramento I2C de verdade como recurso disputado por duas tarefas.</p>
+<h1 id="unidade-4-padroes-de-concorrencia">Unidade 4 · Padrões de concorrência<a class="headerlink" href="#unidade-4-padroes-de-concorrencia" title="Permanent link">&para;</a></h1>
+<p>Semanas 9 a 11. Com várias tarefas no ar, a pergunta que manda no projeto é <strong>como elas trocam dados sem se atrapalhar</strong>. A unidade responde com uma sequência de padrões, do mais simples ao mais estruturado: filas entre produtor e consumidor, recursos protegidos por mutex, e por fim objetos ativos que não compartilham nada e só conversam por eventos. Fecha usando um barramento I2C de verdade como recurso disputado.</p>
 <div class="admonition warning">
 <p class="admonition-title">Em construção</p>
 <p>Os capítulos desta unidade ainda estão sendo escritos. A tabela abaixo é o plano.</p>
@@ -1658,41 +1658,49 @@
 <th>Semana</th>
 <th>Aula</th>
 <th>Capítulo</th>
-<th>C++</th>
-<th>Tempo real</th>
+<th>Padrão</th>
+<th>C++ / tempo real</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>8</td>
-<td>A</td>
-<td>14. Escalonamento por prioridades</td>
-<td>simulador de escalonador no host</td>
-<td>prioridades fixas, <em>rate monotonic</em>, teste de utilização, prazo perdido</td>
-</tr>
-<tr>
-<td>8</td>
-<td>B</td>
-<td>15. Filas e ISR diferida</td>
-<td><code>struct</code> como mensagem</td>
-<td><code>xQueueSend</code>/<code>xQueueReceive</code>, <code>FromISR</code>, notificação de tarefa, latência de resposta</td>
-</tr>
-<tr>
-<td>9</td>
-<td>A</td>
-<td>16. Recursos compartilhados</td>
-<td>RAII: a classe <code>Trava</code> (o <code>lock_guard</code> do C++ do Zero)</td>
-<td>condição de corrida, mutex, semáforo, <strong>inversão de prioridade</strong> e herança de prioridade</td>
-</tr>
-<tr>
 <td>9</td>
 <td>B</td>
-<td>17. I2C como recurso compartilhado</td>
-<td>interface <code>IDisplay</code>, bytes → <code>int16_t</code></td>
-<td>sensor (MPU6050) e display em tarefas diferentes, no mesmo barramento, protegido por mutex</td>
+<td>14. Filas, produtor-consumidor e ISR diferida</td>
+<td>Queuing, ISR diferida, pipeline</td>
+<td><code>struct</code> como mensagem, <code>Fila&lt;T&gt;</code>; <code>xQueueSend</code>/<code>xQueueReceive</code>, <code>FromISR</code>, notificação de tarefa, latência</td>
+</tr>
+<tr>
+<td>10</td>
+<td>A</td>
+<td>15. Recursos compartilhados</td>
+<td>Critical Region, Guarded Call, RAII</td>
+<td>a classe <code>Trava</code> (o <code>lock_guard</code> do C++ do Zero); corrida, mutex, semáforo, <strong>inversão de prioridade</strong></td>
+</tr>
+<tr>
+<td>10</td>
+<td>B</td>
+<td>16. Active Object (aula 1 de 2)</td>
+<td>Active Object</td>
+<td>tarefa + fila de eventos + máquina de estados, execução até o fim</td>
+</tr>
+<tr>
+<td>11</td>
+<td>A</td>
+<td>16. Máquinas de estados hierárquicas (aula 2 de 2)</td>
+<td>State, State Table, máquina hierárquica</td>
+<td>uma classe por estado × tabela × <code>switch</code>; superestados</td>
+</tr>
+<tr>
+<td>11</td>
+<td>B</td>
+<td>17. I2C: Adapter de display e barramento compartilhado</td>
+<td>Adapter, dono do barramento</td>
+<td>interface <code>IDisplay</code>, bytes → <code>int16_t</code>; sensor (MPU6050) e display em tarefas diferentes</td>
 </tr>
 </tbody>
 </table>
+<p>O I2C você já viu em Sistemas Microcontrolados. No capítulo 17 ele é o cenário: o assunto é decidir entre proteger o barramento com mutex ou dar a ele um único dono.</p>
 
 
 

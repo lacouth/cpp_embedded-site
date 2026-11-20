@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#unidade-5-sistemas-completos" class="md-skip">
+        <a href="#unidade-5-sistemas-robustos-e-conectados" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -706,7 +706,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
     
@@ -723,7 +723,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
           </label>
@@ -866,7 +866,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
     
@@ -883,7 +883,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
           </label>
@@ -935,7 +935,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
     
@@ -952,7 +952,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
           </label>
@@ -1097,7 +1097,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
     
@@ -1114,7 +1114,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
           </label>
@@ -1646,8 +1646,8 @@
   
 
 
-<h1 id="unidade-5-sistemas-completos">Unidade 5 · Sistemas completos<a class="headerlink" href="#unidade-5-sistemas-completos" title="Permanent link">&para;</a></h1>
-<p>Semanas 10 a 12. Os dois últimos capítulos tratam do que separa um protótipo de um sistema que fica ligado meses: <strong>robustez</strong> (o que acontece quando uma tarefa trava) e <strong>conectividade sem perder prazo</strong> (a rede é lenta e imprevisível, e não pode atrasar o controle). É a arquitetura de referência do <a href="../projeto/">projeto final</a>.</p>
+<h1 id="unidade-5-sistemas-robustos-e-conectados">Unidade 5 · Sistemas robustos e conectados<a class="headerlink" href="#unidade-5-sistemas-robustos-e-conectados" title="Permanent link">&para;</a></h1>
+<p>Semanas 12 a 14. Os dois últimos capítulos tratam do que separa um protótipo de um sistema que fica ligado meses: <strong>robustez</strong> (o que acontece quando uma tarefa trava ou um sensor mente) e <strong>conectividade sem perder prazo</strong> (a rede é lenta e imprevisível, e não pode atrasar o controle). É a arquitetura de referência do <a href="../projeto/">projeto final</a>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Em construção</p>
 <p>Os capítulos desta unidade ainda estão sendo escritos. A tabela abaixo é o plano.</p>
@@ -1662,27 +1662,27 @@
 </thead>
 <tbody>
 <tr>
-<td>10</td>
+<td>12</td>
 <td>A</td>
-<td>18. SPI e robustez: driver SPI (matriz MAX7219) numa tarefa, watchdog de tarefa, <em>timeouts</em>, monitoramento de pilha</td>
+<td>18. SPI e padrões de robustez: driver SPI (matriz MAX7219) numa tarefa; <strong>Watchdog</strong>, <em>timeout</em> em toda espera, <strong>Smart Data</strong>, validação de sensor e modo degradado; monitoramento de pilha</td>
 </tr>
 <tr>
-<td>10</td>
+<td>12</td>
 <td>B</td>
 <td><strong>Avaliação 2</strong> (capítulos 10–18)</td>
 </tr>
 <tr>
-<td>11</td>
+<td>13</td>
 <td>A</td>
-<td>19. Wi-Fi e MQTT como tarefa de baixa prioridade: <code>WiFi.begin("Wokwi-GUEST", "", 6)</code>, PubSubClient, reconexão, sem atrapalhar o prazo das outras tarefas</td>
+<td>19. Wi-Fi e MQTT: <strong>publish-subscribe</strong> sem perder prazo. <code>WiFi.begin("Wokwi-GUEST", "", 6)</code>, PubSubClient, máquina de reconexão num objeto ativo de baixa prioridade</td>
 </tr>
 <tr>
-<td>11</td>
+<td>13</td>
 <td>B</td>
 <td>Laboratório do projeto: demonstração parcial</td>
 </tr>
 <tr>
-<td>12</td>
+<td>14</td>
 <td>A e B</td>
 <td>Apresentações dos projetos</td>
 </tr>

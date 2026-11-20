@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#unidade-2-c-perto-do-metal" class="md-skip">
+        <a href="#unidade-2-perto-do-metal-padroes-de-acesso-ao-hardware" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -708,7 +708,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
     
@@ -725,7 +725,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
           </label>
@@ -868,7 +868,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
     
@@ -885,7 +885,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
           </label>
@@ -937,7 +937,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
     
@@ -954,7 +954,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
           </label>
@@ -1097,7 +1097,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
     
@@ -1114,7 +1114,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
           </label>
@@ -1646,8 +1646,8 @@
   
 
 
-<h1 id="unidade-2-c-perto-do-metal">Unidade 2 · C++ perto do metal<a class="headerlink" href="#unidade-2-c-perto-do-metal" title="Permanent link">&para;</a></h1>
-<p>Semanas 3 a 5. A unidade desce um nível: o que é, de fato, um pino? Quanto tempo leva um <code>digitalWrite</code>? Como uma classe esconde um registrador? Como testar lógica que conversa com hardware sem ter o hardware? E como o hardware avisa o programa de que algo aconteceu, em vez de esperar ser consultado?</p>
+<h1 id="unidade-2-perto-do-metal-padroes-de-acesso-ao-hardware">Unidade 2 · Perto do metal: padrões de acesso ao hardware<a class="headerlink" href="#unidade-2-perto-do-metal-padroes-de-acesso-ao-hardware" title="Permanent link">&para;</a></h1>
+<p>Semanas 3 a 5. Em Sistemas Microcontrolados você já fez o hardware funcionar: ADC, PWM, interrupções. Esta unidade pergunta outra coisa: <strong>como organizar o código que fala com o hardware</strong> para que ele seja rápido, legível, trocável e testável sem placa. Cada capítulo apresenta um padrão de acesso ao hardware e o C++ que o torna seguro.</p>
 <div class="admonition warning">
 <p class="admonition-title">Em construção</p>
 <p>Os capítulos desta unidade ainda estão sendo escritos. A tabela abaixo é o plano.</p>
@@ -1658,6 +1658,7 @@
 <th>Semana</th>
 <th>Aula</th>
 <th>Capítulo</th>
+<th>Padrão</th>
 <th>C++</th>
 <th>Hardware</th>
 </tr>
@@ -1666,48 +1667,55 @@
 <tr>
 <td>3</td>
 <td>A</td>
-<td>5. Tipos de tamanho fixo e bits</td>
-<td><code>uint8_t</code>…<code>uint32_t</code>, <code>&amp;</code>, <code>|</code>, <code>^</code>, <code>~</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;</code>, máscaras</td>
+<td>5. Bits em C++ e registradores tipados</td>
+<td>registrador tipado</td>
+<td><code>&lt;cstdint&gt;</code>, máscaras <code>constexpr</code>, <code>enum class</code> para campos, <code>static_assert</code></td>
 <td>registrador simulado no host</td>
 </tr>
 <tr>
 <td>3</td>
 <td>B</td>
-<td>6. <code>volatile</code>, registradores e medir tempo</td>
-<td><code>volatile</code>, classe sobre registrador</td>
+<td>6. <code>volatile</code> e Hardware Proxy</td>
+<td>Hardware Proxy</td>
+<td><code>volatile</code>, ponteiro para endereço fixo</td>
 <td>GPIO do ESP32 por registrador; <code>micros()</code> para medir quanto custa cada operação</td>
 </tr>
 <tr>
 <td>4</td>
 <td>A</td>
-<td>7. ADC e PWM</td>
+<td>7. ADC e PWM atrás de um Adapter</td>
+<td>Adapter, sensor inteligente</td>
 <td>conta inteira, escala, ponto fixo × <code>float</code></td>
-<td>potenciômetro, <code>analogRead</code>, <code>ledcAttach</code>/<code>ledcWrite</code>, servo</td>
+<td>potenciômetro e NTC na mesma interface, <code>ledcAttach</code>/<code>ledcWrite</code>, servo</td>
 </tr>
 <tr>
 <td>4</td>
 <td>B</td>
-<td>8. Interfaces e HAL testável</td>
-<td>classe abstrata, <code>virtual</code>, implementação real × falsa</td>
+<td>8. Interfaces e HAL (aula 1 de 2)</td>
+<td>interface, injeção de dependência</td>
+<td>classe abstrata, <code>virtual</code>, <code>override</code>, destrutor virtual</td>
 <td>os drivers da Unidade 1 atrás de uma interface</td>
 </tr>
 <tr>
 <td>5</td>
 <td>A</td>
-<td>9. Interrupções e timers de hardware</td>
-<td><code>volatile</code>, ISR curta, seção crítica</td>
-<td><code>attachInterrupt</code>, <code>IRAM_ATTR</code>, encoder rotativo, timer de hardware</td>
+<td>8. Padrões de testabilidade (aula 2 de 2)</td>
+<td>Stub, Fake, Spy, Mock; <em>seams</em></td>
+<td>implementação real × falsa, teste antes do código</td>
+<td>o mesmo termostato no host e no Wokwi</td>
 </tr>
 <tr>
 <td>5</td>
 <td>B</td>
-<td><strong>Avaliação 1</strong> (capítulos 1–9)</td>
-<td></td>
-<td></td>
+<td>9. Interrupções e timers de hardware</td>
+<td>Interrupt, Polling × interrupção</td>
+<td><code>volatile</code>, ISR curta, seção crítica</td>
+<td><code>attachInterrupt</code>, <code>IRAM_ATTR</code>, encoder rotativo, timer de hardware</td>
 </tr>
 </tbody>
 </table>
-<p>Ponte com a Unidade 1: o <code>arduino_falso.h</code> que você usa desde o capítulo 1 é uma "implementação falsa" do hardware. No capítulo 8 essa ideia ganha nome e uma forma melhor: interfaces. E o capítulo 9 é a porta de entrada para a Unidade 3: uma interrupção é o primeiro contato com <strong>latência</strong>, o tempo entre o mundo mudar e o programa reagir.</p>
+<p>A <a href="../avaliacoes/a1-regras/">Avaliação 1</a> (capítulos 1–9) é na semana 6, aula B, depois do capítulo 10.</p>
+<p>Ponte com a Unidade 1: o <code>arduino_falso.h</code> que você usa desde o capítulo 1 é um <strong>Fake</strong> do hardware, encaixado por um <em>link seam</em> (troca-se o <code>#include</code>). No capítulo 8 essa ideia ganha nome e uma forma melhor: interfaces. E o capítulo 9 é a porta de entrada para a Unidade 3: uma interrupção é o primeiro contato com <strong>latência</strong>, o tempo entre o mundo mudar e o programa reagir.</p>
 
 
 

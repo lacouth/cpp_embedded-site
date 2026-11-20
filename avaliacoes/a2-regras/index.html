@@ -706,7 +706,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
     
@@ -723,7 +723,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
           </label>
@@ -866,7 +866,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
     
@@ -883,7 +883,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
           </label>
@@ -935,7 +935,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
     
@@ -952,7 +952,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
           </label>
@@ -1210,7 +1210,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
     
@@ -1227,7 +1227,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
           </label>
@@ -1835,7 +1835,7 @@
 
 <h1 id="avaliacao-2-regras-e-formato">Avaliação 2 — regras e formato<a class="headerlink" href="#avaliacao-2-regras-e-formato" title="Permanent link">&para;</a></h1>
 <h2 id="quando-e-o-que-cobre">Quando e o que cobre<a class="headerlink" href="#quando-e-o-que-cobre" title="Permanent link">&para;</a></h2>
-<p><strong>Semana 10, aula B.</strong> Capítulos 10 a 18: memória estática e <code>RingBuffer</code>, fundamentos de tempo real (prazo, latência, jitter, executivo cíclico), tarefas do FreeRTOS (inclusive como objetos e periódicas), escalonamento por prioridades e <em>rate monotonic</em>, filas e ISR diferida, mutex, semáforos e inversão de prioridade, I2C e SPI usados por tarefas, watchdog e <em>timeouts</em>.</p>
+<p><strong>Semana 12, aula B.</strong> Capítulos 10 a 18: memória estática, <code>RingBuffer</code> e Command, Observer e Strategy (com <code>virtual</code> e com templates), fundamentos de tempo real (prazo, latência, jitter, utilização, executivo cíclico), tarefas do FreeRTOS (inclusive como objetos e periódicas), filas e ISR diferida, mutex, RAII e inversão de prioridade, Active Object e máquinas de estados hierárquicas, I2C e SPI usados por tarefas, padrões de robustez (watchdog, <em>timeouts</em>, modo degradado).</p>
 <p>Os capítulos 1 a 9 não são cobrados diretamente, mas tudo o que se constrói nesta avaliação usa o que veio deles (classes, máquinas de estados, interfaces, interrupções).</p>
 <h2 id="peso">Peso<a class="headerlink" href="#peso" title="Permanent link">&para;</a></h2>
 <p><strong>1/3 da nota final</strong>.</p>
@@ -1864,7 +1864,7 @@
 </tr>
 </tbody>
 </table>
-<p>A questão de leitura desta prova é de <strong>tempo real</strong>: dado um conjunto de tarefas com período, tempo de execução e prioridade, quem roda em cada instante e qual prazo é perdido; o que acontece com um contador compartilhado sem mutex; como uma inversão de prioridade atrasa a tarefa mais importante.</p>
+<p>A questão de leitura desta prova é de <strong>tempo real</strong>: dado um conjunto de tarefas com período, tempo de execução e prioridade, quem roda em cada instante e qual prazo é perdido; o que acontece com um contador compartilhado sem mutex; como uma inversão de prioridade atrasa a tarefa mais importante. Ou de <strong>arquitetura</strong>: dado um problema (dois produtores e um display lento, um sensor que às vezes mente), qual padrão resolve e o que muda no código.</p>
 <h2 id="consulta">Consulta<a class="headerlink" href="#consulta" title="Permanent link">&para;</a></h2>
 <p>Uma folha de consulta manuscrita, frente e verso. A assinatura de <code>xTaskCreatePinnedToCore</code> e de <code>xQueueReceive</code>, e a fórmula do teste de utilização, são boas candidatas.</p>
 <h2 id="como-e-corrigida">Como é corrigida<a class="headerlink" href="#como-e-corrigida" title="Permanent link">&para;</a></h2>
@@ -1878,8 +1878,8 @@
 <ol>
 <li>Refaça as listas 10 a 18.</li>
 <li>Para cada <code>wk</code> de FreeRTOS, desenhe as tarefas, as filas e quem escreve em quê antes de reler o código.</li>
-<li>Faça à mão a linha do tempo (quem roda em cada milissegundo) dos conjuntos de tarefas da Lista 14.</li>
-<li>Resolva o simulado (publicado na semana 9) cronometrado.</li>
+<li>Faça à mão a linha do tempo (quem roda em cada milissegundo) dos conjuntos de tarefas da Lista 12.</li>
+<li>Resolva o simulado (publicado na semana 11) cronometrado.</li>
 </ol>
 
 

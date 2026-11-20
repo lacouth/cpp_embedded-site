@@ -832,7 +832,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
     
@@ -849,7 +849,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 2 · C++ perto do metal
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
   
 
           </label>
@@ -992,7 +992,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
     
@@ -1009,7 +1009,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 3 · Fundamentos de tempo real
+    Unidade 3 · Padrões de comportamento e tempo real
   
 
           </label>
@@ -1061,7 +1061,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
     
@@ -1078,7 +1078,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 4 · Escalonamento e sincronização
+    Unidade 4 · Padrões de concorrência
   
 
           </label>
@@ -1221,7 +1221,7 @@
   <span class="md-ellipsis">
     
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
     
@@ -1238,7 +1238,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Unidade 5 · Sistemas completos
+    Unidade 5 · Sistemas robustos e conectados
   
 
           </label>
@@ -2019,6 +2019,12 @@
 <div class="admonition info">
 <p class="admonition-title">Organização dos arquivos</p>
 <p><code>pisca.h</code> inclui <code>led.h</code> e <code>temporizador.h</code>, e o sketch inclui <code>pisca.h</code> <strong>e</strong> <code>led.h</code>. O <code>led.h</code> acaba incluído duas vezes, e é para isso que existe o <code>#ifndef LED_H</code> / <code>#define LED_H</code> / <code>#endif</code> no topo do arquivo (o <em>include guard</em> do <a href="https://lacouth.github.io/cpp_begins-site/unidade5-oo/12-multiplos-arquivos/">capítulo 12 do C++ do Zero</a>): a segunda inclusão é ignorada.</p>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">Padrão de projeto: composição e Polling</p>
+<p><code>Pisca</code> é <strong>composição</strong>: um objeto montado com outros, cada um protegendo os próprios invariantes. É o princípio "prefira composição a herança" do livro clássico de padrões (Gamma, Helm, Johnson e Vlissides), e quase todos os padrões do curso são montados assim.</p>
+<p>O <code>Temporizador</code> perguntado a cada volta é o padrão <strong>Polling</strong> (Douglass): o programa consulta o estado em vez de ser avisado. E o <code>loop()</code> feito de <code>atualiza()</code> que nunca esperam é um <strong>superloop cooperativo</strong>: funciona enquanto todo mundo coopera.</p>
+<p>Os dois voltam: o capítulo 9 compara Polling com interrupção, e o capítulo 12 mede até onde o superloop aguenta antes de um prazo ser perdido.</p>
 </div>
 <h2 id="erros-comuns">Erros comuns<a class="headerlink" href="#erros-comuns" title="Permanent link">&para;</a></h2>
 <p><strong><code>if (millis() % 500 == 0)</code>.</strong> Parece pedir "a cada 500 ms", mas exige que o <code>loop()</code> passe <strong>exatamente</strong> no milissegundo certo. Às vezes passa, às vezes não, e o pisca falha de vez em quando. Use a subtração.</p>
