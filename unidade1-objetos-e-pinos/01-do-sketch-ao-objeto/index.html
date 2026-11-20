@@ -2368,7 +2368,7 @@
 <p class="admonition-title">Padrão de projeto: Hardware Proxy</p>
 <p>Um <strong>padrão de projeto</strong> é uma solução conhecida, com nome, para um problema de projeto que se repete. Dar nome ajuda a conversar ("isso pede um Proxy") e a reconhecer a mesma ideia em código alheio.</p>
 <p>A classe <code>Led</code> é a forma mais simples do <strong>Hardware Proxy</strong> (catálogo de Bruce Powel Douglass): um objeto que fica no lugar do periférico e é o <strong>único</strong> a falar com ele. O resto do programa pede <code>liga()</code> e nunca vê o número do pino nem o <code>digitalWrite</code>. Separar <code>inicia()</code> do construtor também tem nome: <strong>inicialização em duas fases</strong>.</p>
-<p>O Proxy volta no capítulo 6, quando o mesmo <code>Led</code> passa a escrever direto no registrador do ESP32 e o sketch nem percebe a troca.</p>
+<p>O Proxy volta no capítulo 6, numa classe com a mesma interface do <code>Led</code> que escreve direto no registrador do ESP32: muda a declaração do objeto, e o resto do sketch continua igual.</p>
 </div>
 <h2 id="erros-comuns">Erros comuns<a class="headerlink" href="#erros-comuns" title="Permanent link">&para;</a></h2>
 <p><strong>O LED não acende, e o código parece certo.</strong> Três suspeitos, nesta ordem: (1) faltou chamar <code>inicia()</code> no <code>setup()</code>, então o pino nunca virou saída; (2) o LED está invertido na bancada (o terminal <code>A</code>, ânodo, vai para o lado do pino); (3) o número no construtor não bate com o fio do <code>diagram.json</code> (<code>Led vermelho(26)</code> exige o fio em <code>esp:D26</code>).</p>

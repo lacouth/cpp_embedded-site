@@ -2077,7 +2077,7 @@
 <p>Cada volta do <code>loop()</code> passa a levar microssegundos: confere o relógio, quase sempre conclui que ainda não é hora, e segue para atender o botão, o outro LED, o sensor.</p>
 <div class="admonition note">
 <p class="admonition-title">E quando o <code>millis()</code> estoura?</p>
-<p>Depois de cerca de 49 dias ligado, o contador de 32 bits chega ao máximo e volta a zero. A comparação <code>agora - inicio &gt;= intervalo</code> continua certa mesmo nessa virada, porque a subtração de inteiros sem sinal "dá a volta" junto. Por isso a forma é sempre essa: <strong>subtraia e compare com o intervalo</strong>. Nunca compare <code>agora &gt;= inicio + intervalo</code>, que quebra na virada.</p>
+<p>Depois de cerca de 49 dias ligado, o contador de 32 bits chega ao máximo e volta a zero. A comparação <code>agora - inicio &gt;= intervalo</code> continua certa mesmo nessa virada, porque a subtração de inteiros sem sinal "dá a volta" junto. Por isso a forma é sempre essa: <strong>subtraia e compare com o intervalo</strong>. Nunca compare <code>agora &gt;= inicio + intervalo</code>, que quebra na virada. (No computador, onde <code>unsigned long</code> tem 64 bits, a subtração não dá a volta junto com um relógio de 32 bits; o capítulo 6 mostra por que, a partir dali, as classes de tempo fazem a conta em <code>uint32_t</code>.)</p>
 </div>
 <h2 id="a-classe-temporizador">A classe <code>Temporizador</code><a class="headerlink" href="#a-classe-temporizador" title="Permanent link">&para;</a></h2>
 <p>Repetir aquele padrão (variável de início, subtração, comparação) para cada coisa temporizada é o mesmo erro do capítulo 1: estado espalhado. Então ele vira uma classe:</p>
@@ -2200,7 +2200,7 @@
 <a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="p">}</span>
 </code></pre></div>
 <p>O vermelho e o verde piscam em ritmos diferentes, e <strong>todo</strong> clique no botão A alterna o amarelo, na hora. Compare com o projeto do começo do capítulo.</p>
-<p>Esse <code>loop()</code> tem um formato que vai se repetir até o capítulo 10: <strong>uma lista de <code>atualiza()</code> e de perguntas rápidas, nenhuma espera</strong>. Cada objeto cuida do próprio tempo. É o que se chama de <em>superloop cooperativo</em>, e no capítulo 11 você vai ver o limite dele (e, no 12, o que o FreeRTOS faz a respeito).</p>
+<p>Esse <code>loop()</code> tem um formato que vai se repetir até o capítulo 12: <strong>uma lista de <code>atualiza()</code> e de perguntas rápidas, nenhuma espera</strong>. Cada objeto cuida do próprio tempo. É o que se chama de <em>superloop cooperativo</em>, e no capítulo 12 você vai medir o limite dele (e, no 13, ver o que o FreeRTOS faz a respeito).</p>
 <div class="admonition info">
 <p class="admonition-title">Organização dos arquivos</p>
 <p><code>pisca.h</code> inclui <code>led.h</code> e <code>temporizador.h</code>, e o sketch inclui <code>pisca.h</code> <strong>e</strong> <code>led.h</code>. O <code>led.h</code> acaba incluído duas vezes, e é para isso que existe o <code>#ifndef LED_H</code> / <code>#define LED_H</code> / <code>#endif</code> no topo do arquivo (o <em>include guard</em> do <a href="https://lacouth.github.io/cpp_begins-site/unidade5-oo/12-multiplos-arquivos/">capítulo 12 do C++ do Zero</a>): a segunda inclusão é ignorada.</p>

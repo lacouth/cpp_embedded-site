@@ -1884,6 +1884,14 @@
 <td>solução conhecida, com nome, para um problema de projeto que se repete. A classe <code>Led</code> já é um (Hardware Proxy). (cap. 1)</td>
 </tr>
 <tr>
+<td><strong>Hardware Proxy</strong></td>
+<td>padrão em que um objeto fica no lugar do periférico e é o único a falar com ele; o resto do programa só chama métodos como <code>liga()</code>. (cap. 1; volta no cap. 6)</td>
+</tr>
+<tr>
+<td><strong>inicialização em duas fases</strong></td>
+<td>o construtor só guarda a configuração e um segundo método (<code>inicia()</code>) mexe no hardware, porque objetos globais nascem antes do <code>setup()</code>. (cap. 1)</td>
+</tr>
+<tr>
 <td><strong>invariante</strong></td>
 <td>o que precisa ser verdade sobre um objeto o tempo todo. A classe existe para protegê-lo. (cap. 2)</td>
 </tr>
@@ -1914,6 +1922,10 @@
 <tr>
 <td><strong>superloop</strong></td>
 <td>o <code>loop()</code> como lista de <code>atualiza()</code> que nunca esperam, cada objeto cuidando do próprio tempo. (cap. 3)</td>
+</tr>
+<tr>
+<td><strong>Polling</strong></td>
+<td>padrão em que o programa pergunta o estado de algo a cada volta, em vez de ser avisado quando ele muda. (cap. 3; comparado com interrupção no cap. 9)</td>
 </tr>
 <tr>
 <td><strong>máquina de estados</strong></td>
