@@ -15,14 +15,16 @@
 // compilador online) o mesmo codigo de classe que roda no ESP32 do Wokwi.
 //
 // Nao e um simulador. E so o suficiente para:
-//   * o compilador aceitar pinMode/digitalWrite/digitalRead/millis/micros/Serial;
+//   * o compilador aceitar pinMode/digitalWrite/digitalRead/millis/micros/Serial,
+//     analogRead e o PWM do ESP32 (ledcAttach/ledcWrite/ledcWriteTone);
 //   * os testes perguntarem "o que a classe fez com o pino?" e "o que ela
 //     faria se o tempo andasse 500 ms?".
 //
 // Como funciona: cada pino guarda o ultimo nivel escrito e o ultimo modo
 // configurado; millis() e micros() leem um relogio que so anda quando o teste
 // manda (falso::avanca_tempo em ms, falso::avanca_micros em us). digitalRead devolve o que o teste pos no pino com
-// falso::poe_nivel -- e assim que se "aperta um botao" sem botao.
+// falso::poe_nivel -- e assim que se "aperta um botao" sem botao. analogRead devolve
+// o que o teste pos com falso::poe_analogico, e o PWM guarda frequencia, bits e duty.
 //
 // No Wokwi, troque  #include "arduino_falso.h"  por  #include <Arduino.h>
 // e o resto do codigo continua igual.
@@ -37,6 +39,9 @@ const int INPUT = 0;
 const int OUTPUT = 1;
 const int INPUT_PULLUP = 2;
 
+// Atenuacao do ADC, com os nomes do core 3.x (o padrao do chip e ADC_11db).
+enum adc_attenuation_t { ADC_0db, ADC_2_5db, ADC_6db, ADC_11db, ADC_ATTENDB_MAX };
+
 // ---- Estado do "hardware" falso -------------------------------------------
 namespace falso {
 
@@ -46,6 +51,12 @@ struct Pino {
     int nivel = LOW;
     int modo = -1;          // -1: ninguem chamou pinMode ainda
     int escritas = 0;       // quantas vezes digitalWrite foi chamado neste pino
+    int analogico = 0;      // o que analogRead devolve (0 a 4095, como o ADC de 12 bits)
+    int atenuacao = -1;     // -1: ninguem chamou analogSetPinAttenuation
+    bool pwm = false;       // ledcAttach foi chamado?
+    uint32_t pwm_freq = 0;  // Hz
+    int pwm_bits = 0;       // resolucao do duty
+    uint32_t pwm_duty = 0;  // ultimo valor de ledcWrite
 };
 
 inline Pino& pino(int numero) {
@@ -64,6 +75,12 @@ inline int nivel(int numero) { return pino(numero).nivel; }
 inline int modo(int numero) { return pino(numero).modo; }
 inline int escritas(int numero) { return pino(numero).escritas; }
 inline void poe_nivel(int numero, int nivel) { pino(numero).nivel = nivel; }
+inline void poe_analogico(int numero, int bruto) { pino(numero).analogico = bruto; }
+inline int atenuacao(int numero) { return pino(numero).atenuacao; }
+inline bool pwm(int numero) { return pino(numero).pwm; }
+inline uint32_t frequencia(int numero) { return pino(numero).pwm_freq; }
+inline int bits_pwm(int numero) { return pino(numero).pwm_bits; }
+inline uint32_t duty(int numero) { return pino(numero).pwm_duty; }
 inline void avanca_tempo(unsigned long ms) { relogio_us() += 1000ull * ms; }
 inline void avanca_micros(unsigned long us) { relogio_us() += us; }
 
@@ -111,6 +128,50 @@ inline void delay(unsigned long ms) {
 
 inline void delayMicroseconds(unsigned int us) {
     falso::relogio_us() += us;
+}
+
+// ---- ADC e PWM (LEDC) do ESP32, com as assinaturas do core 3.x -------------
+inline void analogSetPinAttenuation(int numero, adc_attenuation_t atenuacao) {
+    falso::pino(numero).atenuacao = atenuacao;
+}
+
+inline uint16_t analogRead(int numero) {
+    return static_cast<uint16_t>(falso::pino(numero).analogico);
+}
+
+inline bool ledcAttach(int numero, uint32_t freq, uint8_t bits) {
+    falso::Pino& p = falso::pino(numero);
+    p.pwm = true;
+    p.pwm_freq = freq;
+    p.pwm_bits = bits;
+    p.pwm_duty = 0;
+    return true;
+}
+
+inline bool ledcWrite(int numero, uint32_t duty) {
+    falso::Pino& p = falso::pino(numero);
+    if (!p.pwm) {
+        return false;   // como no real: sem ledcAttach, nada acontece
+    }
+    p.pwm_duty = duty;
+    return true;
+}
+
+// Como no core 3.x: frequencia 0 so zera o duty; senao o pino passa a 10 bits
+// e duty 0x1FF (quase 50%), uma onda quadrada na frequencia pedida.
+inline uint32_t ledcWriteTone(int numero, uint32_t freq) {
+    falso::Pino& p = falso::pino(numero);
+    if (!p.pwm) {
+        return 0;
+    }
+    if (freq == 0) {
+        p.pwm_duty = 0;
+        return 0;
+    }
+    p.pwm_freq = freq;
+    p.pwm_bits = 10;
+    p.pwm_duty = 0x1FF;
+    return freq;
 }
 
 // ---- Serial: imprime no terminal ------------------------------------------

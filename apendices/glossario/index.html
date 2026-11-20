@@ -686,6 +686,8 @@
       
         
       
+        
+      
     
     
     
@@ -783,6 +785,34 @@
     
   
     6. volatile e Hardware Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade2-perto-do-metal/07-adc-pwm-adapter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. ADC e PWM atrás de um Adapter
   
 
     
@@ -1217,6 +1247,8 @@
       
         
       
+        
+      
     
     
     
@@ -1426,6 +1458,34 @@
     
   
     Lista 06 · volatile e Hardware Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 07 · ADC e PWM atrás de um Adapter
   
 
     
@@ -1934,6 +1994,74 @@
 <tr>
 <td><strong>debounce</strong></td>
 <td>filtrar o quique: só aceitar uma leitura que fica estável por um tempo. (cap. 4)</td>
+</tr>
+<tr>
+<td><strong>tipo de largura fixa</strong></td>
+<td><code>uint8_t</code>, <code>int16_t</code>, <code>uint32_t</code>…: inteiros com o mesmo número de bits em qualquer plataforma (<code>&lt;cstdint&gt;</code>). (cap. 5)</td>
+</tr>
+<tr>
+<td><strong>registrador</strong></td>
+<td>uma palavra do chip, num endereço fixo, em que cada bit ou grupo de bits configura ou mostra o estado de um periférico. (cap. 5)</td>
+</tr>
+<tr>
+<td><strong>máscara</strong></td>
+<td>um número com 1 nos bits que interessam, usado com as operações E, OU e OU exclusivo bit a bit para ler, ligar, desligar ou inverter só esses bits. (cap. 5)</td>
+</tr>
+<tr>
+<td><strong>campo de bits</strong></td>
+<td>um grupo de bits vizinhos de um registrador que guarda um número (um divisor, um modo). (cap. 5)</td>
+</tr>
+<tr>
+<td><strong><code>static_assert</code></strong></td>
+<td>uma condição conferida pelo compilador: se for falsa, o programa não compila. (cap. 5)</td>
+</tr>
+<tr>
+<td><strong><code>volatile</code></strong></td>
+<td>avisa o compilador que aquela memória pode mudar ou ser lida por fora do programa: cada leitura e cada escrita tem que acontecer de verdade. (cap. 6)</td>
+</tr>
+<tr>
+<td><strong>W1TS / W1TC</strong></td>
+<td>registradores do ESP32 em que escrever 1 num bit liga (<em>write 1 to set</em>) ou desliga (<em>write 1 to clear</em>) só aquele pino. (cap. 6)</td>
+</tr>
+<tr>
+<td><strong><code>micros()</code></strong></td>
+<td>microssegundos desde que a placa ligou; dá a volta a cada ~71 minutos. (cap. 6)</td>
+</tr>
+<tr>
+<td><strong>jitter</strong></td>
+<td>a variação do tempo de uma operação que deveria levar sempre o mesmo tempo. (cap. 6)</td>
+</tr>
+<tr>
+<td><strong>ADC</strong></td>
+<td>conversor analógico-digital: transforma uma tensão num número. No ESP32, 0 a 4095 (12 bits). (cap. 7)</td>
+</tr>
+<tr>
+<td><strong>atenuação</strong></td>
+<td>o ajuste do ADC do ESP32 que define até que tensão ele mede; o padrão, <code>ADC_11db</code>, vai até perto de 3,3 V. (cap. 7)</td>
+</tr>
+<tr>
+<td><strong>PWM</strong></td>
+<td>modulação por largura de pulso: uma onda quadrada cuja fração do tempo em nível alto controla brilho, posição de servo ou potência. (cap. 7)</td>
+</tr>
+<tr>
+<td><strong>duty (ciclo de trabalho)</strong></td>
+<td>a fração do período em que o sinal PWM fica em nível alto, em passos de 0 a 2<sup>bits</sup>. (cap. 7)</td>
+</tr>
+<tr>
+<td><strong>Adapter</strong></td>
+<td>padrão em que uma classe converte a interface de uma peça (0 a 4095, <em>duty</em>) na interface que o programa espera (graus, permil). (cap. 7)</td>
+</tr>
+<tr>
+<td><strong>sensor inteligente</strong></td>
+<td>um sensor que entrega a grandeza já calibrada, com unidade, faixa e validade, e não o número cru do conversor. (cap. 7)</td>
+</tr>
+<tr>
+<td><strong>calibração</strong></td>
+<td>os números que ligam a leitura crua de um sensor (ou o comando de um atuador) à grandeza real, como dois pontos medidos ou os extremos de pulso de um servo. (cap. 7)</td>
+</tr>
+<tr>
+<td><strong>interpolação linear</strong></td>
+<td>estimar um valor entre dois pontos conhecidos de uma tabela pela reta que os liga. (cap. 7)</td>
 </tr>
 </tbody>
 </table>

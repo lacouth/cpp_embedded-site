@@ -1,0 +1,2841 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Continuação do curso C++ do Zero: padrões de projeto de sistemas embarcados e de tempo real em C++ no ESP32 (simulado no Wokwi), de classes que controlam pinos até objetos ativos, filas e semáforos do FreeRTOS.">
+      
+      
+        <meta name="author" content="lacouth">
+      
+      
+        <link rel="canonical" href="https://lacouth.github.io/cpp_embedded-site/unidade2-perto-do-metal/07-adc-pwm-adapter/">
+      
+      
+        <link rel="prev" href="../06-volatile-hardware-proxy/">
+      
+      
+        <link rel="next" href="../../avaliacoes/a1-regras/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>7. ADC e PWM atrás de um Adapter - Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#7-adc-e-pwm-atras-de-um-adapter" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++" class="md-header__button md-logo" aria-label="Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              7. ADC e PWM atrás de um Adapter
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="mudar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="mudar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="mudar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="mudar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/lacouth/cpp_embedded" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cpp_embedded
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++" class="md-nav__button md-logo" aria-label="Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lacouth/cpp_embedded" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cpp_embedded
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../nivelamento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nivelamento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../setup/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambiente
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ambiente
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/wokwi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wokwi (simulador)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/compilador-online/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilador online
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/ambiente-local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambiente local (opcional)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade1-objetos-e-pinos/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1 · Objetos que controlam pinos
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 1 · Objetos que controlam pinos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade1-objetos-e-pinos/01-do-sketch-ao-objeto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Do sketch ao objeto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade1-objetos-e-pinos/02-construtores-botao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Construtores, const e invariantes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade1-objetos-e-pinos/03-tempo-composicao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Tempo sem bloquear e composição
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade1-objetos-e-pinos/04-maquina-de-estados/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Máquinas de estados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 2 · Perto do metal: padrões de acesso ao hardware
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-bits-em-cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Bits em C++ e registradores tipados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-volatile-hardware-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. volatile e Hardware Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. ADC e PWM atrás de um Adapter
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. ADC e PWM atrás de um Adapter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-problema-numeros-do-hardware-no-meio-da-logica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O problema: números do hardware no meio da lógica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o-adc-do-esp32-no-que-ele-tem-de-diferente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O ADC do ESP32, no que ele tem de diferente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aritmetica-inteira-escala-no-lugar-de-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aritmética inteira: escala() no lugar de map()
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#do-bruto-a-temperatura-tabela-e-interpolacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do bruto à temperatura: tabela e interpolação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o-adapter-um-sensor-que-fala-a-lingua-do-programa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O Adapter: um sensor que fala a língua do programa
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validar-a-faixa-e-ate-onde-isso-vai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validar a faixa, e até onde isso vai
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#atuadores-o-pwm-do-esp32-no-core-3x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atuadores: o PWM do ESP32 no core 3.x
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Atuadores: o PWM do ESP32 no core 3.x">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-servo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O servo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-buzzer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O buzzer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o-termometro-de-ponteiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O termômetro de ponteiro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-troca-o-tipo-numa-linha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A troca: o tipo numa linha
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Avaliação 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Avaliação 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../avaliacoes/a1-regras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regras e formato
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade3-tempo-real/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 3 · Padrões de comportamento e tempo real
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 3 · Padrões de comportamento e tempo real
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade4-escalonamento/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 4 · Padrões de concorrência
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 4 · Padrões de concorrência
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Avaliação 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Avaliação 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../avaliacoes/a2-regras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regras e formato
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../unidade5-sistemas-completos/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 5 · Sistemas robustos e conectados
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 5 · Sistemas robustos e conectados
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../listas/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Listas de exercícios
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Listas de exercícios
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 01 · Do sketch ao objeto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 02 · Construtores e botões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 03 · Tempo e composição
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 04 · Máquinas de estados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 05 · Bits e registradores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 06 · volatile e Hardware Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista07/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 07 · ADC e PWM atrás de um Adapter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../projeto/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projeto Final
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Projeto Final
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projeto/temas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Temas sugeridos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apêndices
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Apêndices
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/pinagem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pinagem do ESP32 no curso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/revisao-bits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Revisão: binário, hexadecimal e bits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/padroes-no-mundo-real/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Os padrões no mundo real
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/erros-comuns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Erros comuns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossário
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apendices/referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#o-problema-numeros-do-hardware-no-meio-da-logica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O problema: números do hardware no meio da lógica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o-adc-do-esp32-no-que-ele-tem-de-diferente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O ADC do ESP32, no que ele tem de diferente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aritmetica-inteira-escala-no-lugar-de-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aritmética inteira: escala() no lugar de map()
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#do-bruto-a-temperatura-tabela-e-interpolacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do bruto à temperatura: tabela e interpolação
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o-adapter-um-sensor-que-fala-a-lingua-do-programa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O Adapter: um sensor que fala a língua do programa
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validar-a-faixa-e-ate-onde-isso-vai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validar a faixa, e até onde isso vai
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#atuadores-o-pwm-do-esp32-no-core-3x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atuadores: o PWM do ESP32 no core 3.x
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Atuadores: o PWM do ESP32 no core 3.x">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-servo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O servo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-buzzer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O buzzer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o-termometro-de-ponteiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O termômetro de ponteiro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-troca-o-tipo-numa-linha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A troca: o tipo numa linha
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erros-comuns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erros comuns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="7-adc-e-pwm-atras-de-um-adapter">7. ADC e PWM atrás de um Adapter<a class="headerlink" href="#7-adc-e-pwm-atras-de-um-adapter" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Vídeo</p>
+<p>Ainda não há vídeo para este capítulo.</p>
+</div>
+<p>Um termômetro de ponteiro: um sensor de temperatura, um servo que aponta o valor numa escala e um buzzer que apita quando esquenta demais. Cada peça fala uma língua diferente. O sensor devolve um número de 0 a 4095, o servo quer a largura de um pulso em microssegundos e o buzzer quer uma frequência. Se a lógica do termômetro conversar com cada peça na língua dela, ela fica cheia de números que não têm nada a ver com temperatura.</p>
+<p>Este capítulo coloca um <strong>tradutor</strong> entre cada peça e o resto do programa: o padrão <strong>Adapter</strong>. O sensor passa a responder "25,1 °C, leitura válida", o servo passa a aceitar "vá para 68 graus", e trocar o sensor de temperatura por um potenciômetro vira uma mudança de duas linhas.</p>
+<div class="admonition note">
+<p class="admonition-title">ADC e PWM você já viu em Sistemas Microcontrolados</p>
+<p>Ler uma tensão com o conversor analógico-digital, controlar o brilho de um LED por PWM e mover um servo não são novidade. Este capítulo usa esses periféricos como <strong>cenário</strong>. O assunto é como organizar o código em volta deles: aritmética inteira, conversão de unidades, validação da leitura, e uma classe que esconde o periférico do resto do programa. Do hardware, só aparece o que é específico do ESP32 ou do core Arduino 3.x.</p>
+</div>
+<h2 id="o-problema-numeros-do-hardware-no-meio-da-logica">O problema: números do hardware no meio da lógica<a class="headerlink" href="#o-problema-numeros-do-hardware-no-meio-da-logica" title="Permanent link">&para;</a></h2>
+<p>A versão direta do termômetro funciona, e é assim que muito firmware começa:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">bruto</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">analogRead</span><span class="p">(</span><span class="mi">35</span><span class="p">);</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10000.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bruto</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">4095</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">bruto</span><span class="p">);</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">10000</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3950</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">298.15</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">273.15</span><span class="p">;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="n">ledcWrite</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="w"> </span><span class="n">map</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="mi">-20</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">446</span><span class="p">,</span><span class="w"> </span><span class="mi">1966</span><span class="p">));</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">76</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="n">ledcWriteTone</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="w"> </span><span class="mi">880</span><span class="p">);</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="n">ledcWriteTone</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">}</span>
+</code></pre></div>
+<p>Cada número desse <code>loop()</code> pertence a uma peça diferente: <code>4095</code> é o ADC, <code>10000</code> e <code>3950</code> são o NTC, <code>446</code> e <code>1966</code> são o servo. A lógica de verdade ("mostre a temperatura; apite acima de 76 °C") está enterrada no meio deles. E três perguntas ficam sem resposta boa:</p>
+<ol>
+<li><strong>Trocar o sensor.</strong> Se o NTC virar outro sensor, quais linhas mudam? Todas as que tocam em <code>bruto</code>, <code>r</code> e <code>c</code>.</li>
+<li><strong>Testar sem placa.</strong> Como conferir no computador que 2048 vira 25 °C, se a conta está misturada com <code>ledcWrite</code>?</li>
+<li><strong>Sensor quebrado.</strong> Um fio solto produz <em>alguma</em> leitura. Quem decide que ela não presta?</li>
+</ol>
+<h2 id="o-adc-do-esp32-no-que-ele-tem-de-diferente">O ADC do ESP32, no que ele tem de diferente<a class="headerlink" href="#o-adc-do-esp32-no-que-ele-tem-de-diferente" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>ESP32 com o core Arduino 3.x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resolução padrão</td>
+<td>12 bits: <code>analogRead</code> devolve de <strong>0 a 4095</strong></td>
+</tr>
+<tr>
+<td>Atenuação padrão</td>
+<td><code>ADC_11db</code>: a faixa de entrada vai até perto de 3,3 V. Escolha com <code>analogSetPinAttenuation(pino, ADC_11db)</code></td>
+</tr>
+<tr>
+<td>Pinos do curso</td>
+<td><code>D34</code> (potenciômetro) e <code>D35</code> (sensor): são do ADC1 e <strong>só entrada</strong></td>
+</tr>
+<tr>
+<td>ADC2</td>
+<td>os pinos do ADC2 (como 25, 26 e 27) não leem enquanto o Wi-Fi está ligado. Para não ter surpresa no capítulo 19, sensor analógico vai no ADC1</td>
+</tr>
+</tbody>
+</table>
+<p>O core oferece duas leituras: <code>analogRead</code>, o número <strong>bruto</strong> do conversor, e <code>analogReadMilliVolts</code>, que já devolve milivolts aplicando a curva de calibração gravada no chip. No Wokwi, com o potenciômetro em cinco posições, as duas deram isto:</p>
+<table>
+<thead>
+<tr>
+<th>Posição do potenciômetro (0 a 1023)</th>
+<th><code>analogRead</code></th>
+<th><code>analogReadMilliVolts</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>128</td>
+</tr>
+<tr>
+<td>256</td>
+<td>1025</td>
+<td>993</td>
+</tr>
+<tr>
+<td>512</td>
+<td>2050</td>
+<td>1858</td>
+</tr>
+<tr>
+<td>768</td>
+<td>3074</td>
+<td>2680</td>
+</tr>
+<tr>
+<td>1023</td>
+<td>4095</td>
+<td>3152</td>
+</tr>
+</tbody>
+</table>
+<p>No simulador, o conversor é <strong>ideal</strong>: o bruto cresce em linha reta, e 1,65 V (meio curso) vira 2050. O <code>analogReadMilliVolts</code> aplica a correção que um chip de verdade precisa, porque o ADC real do ESP32 entorta perto das pontas da faixa. Aplicada a um conversor que não entorta, a correção é que fica torta (1858 mV para 1,65 V). Por isso o curso usa o <strong>bruto</strong>, e a conversão para a unidade que interessa mora numa classe só. Se um dia a placa for real e precisar de calibração, é essa classe que muda.</p>
+<h2 id="aritmetica-inteira-escala-no-lugar-de-map">Aritmética inteira: <code>escala()</code> no lugar de <code>map()</code><a class="headerlink" href="#aritmetica-inteira-escala-no-lugar-de-map" title="Permanent link">&para;</a></h2>
+<p>Converter de uma faixa para outra é a conta mais comum de um Adapter: 0–4095 para 0–1000, 0–180 graus para 544–2400 µs. O Arduino tem <code>map()</code> para isso, mas ele tem dois defeitos: <strong>trunca</strong> a divisão e <strong>não satura</strong> fora da faixa. O curso usa uma função própria:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Leva x da faixa [de_min, de_max] para [para_min, para_max], arredondando</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">// para o inteiro mais proximo e saturando fora da faixa de entrada.</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">// (O map() do Arduino trunca e nao satura.) A conta e feita em 64 bits porque</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">// o produto do meio passa de 2^31 com facilidade.</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">constexpr</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="nf">escala</span><span class="p">(</span><span class="kt">int32_t</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">de_min</span><span class="p">,</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">de_max</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">                         </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">para_min</span><span class="p">,</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">para_max</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">de_min</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">para_min</span><span class="p">;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">de_max</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">para_max</span><span class="p">;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">de_min</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">para_max</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">para_min</span><span class="p">);</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">den</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">de_max</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">de_min</span><span class="p">;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">meio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">num</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">den</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="n">den</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">para_min</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int32_t</span><span class="o">&gt;</span><span class="p">((</span><span class="n">num</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">meio</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">den</span><span class="p">);</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="p">}</span>
+</code></pre></div>
+<p>Somar metade do denominador antes de dividir é o jeito inteiro de <strong>arredondar</strong> em vez de truncar. Lado a lado com o <code>map()</code> (<code>exemplos/cap07_escala.cpp</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ADC -&gt; permil (0..4095 -&gt; 0..1000)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  0: map 0  escala 0
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  4: map 0  escala 1
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  2047: map 499  escala 500
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  2048: map 500  escala 500
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  4095: map 1000  escala 1000
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  4200: map 1025  escala 1000
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>permil -&gt; graus, faixa invertida (0..1000 -&gt; 180..0)
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  0: map 180  escala 180
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  333: map 121  escala 120
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  500: map 90  escala 90
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  1000: map 0  escala 0
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>produto do meio de escala(40000, 0, 65535, 0, 60000): 2400000000
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>maior int32_t:                                      2147483647
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>escala(40000, 0, 65535, 0, 60000) = 36622
+</code></pre></div>
+<p>Três lições estão aí:</p>
+<ul>
+<li><strong>4200</strong> não existe num ADC de 12 bits, mas um bug ou um ruído pode produzi-lo. O <code>map()</code> devolve 1025 permil; a <code>escala()</code> segura em 1000.</li>
+<li><strong>333</strong> na faixa invertida: a conta exata dá 120,06. O <code>map()</code> responde 121, porque a divisão inteira do C++ trunca <strong>em direção ao zero</strong>, e com número negativo isso arredonda para cima.</li>
+<li><strong>O produto do meio</strong> passa de 2 bilhões com entradas modestas. Em <code>int32_t</code>, isso é transbordamento com sinal, comportamento indefinido. A conta em <code>int64_t</code> custa pouco e elimina o problema.</li>
+</ul>
+<p>E a função é <code>constexpr</code>: <code>static_assert(escala(2048, 0, 4095, 0, 1000) == 500)</code> é conferido pelo compilador, como as máscaras do capítulo 5.</p>
+<div class="admonition tip">
+<p class="admonition-title">A unidade vai no nome</p>
+<p>O curso guarda grandezas em inteiros com a unidade no nome: <code>permil</code> (0 a 1000), <code>decimos_c</code> (251 = 25,1 °C), <code>pulso_us</code>. O ESP32 tem unidade de ponto flutuante para <code>float</code>, então não é por velocidade. É porque inteiro compara com <code>==</code> sem surpresa, cabe numa tabela, tem faixa conhecida, e o nome lembra a cada linha o que o número significa. Um <code>float c</code> não diz se está em graus, kelvin ou décimos.</p>
+</div>
+<h2 id="do-bruto-a-temperatura-tabela-e-interpolacao">Do bruto à temperatura: tabela e interpolação<a class="headerlink" href="#do-bruto-a-temperatura-tabela-e-interpolacao" title="Permanent link">&para;</a></h2>
+<p>O módulo NTC do Wokwi é um divisor de tensão: um resistor fixo de 10 kΩ entre 3,3 V e a saída, e um termistor NTC de 10 kΩ (a 25 °C) entre a saída e o GND. Esquentou, a resistência do NTC cai, e a leitura também. A relação exata usa a equação Beta, com logaritmo:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>R_ntc = 10 kΩ × bruto / (4095 − bruto)            (o divisor)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>1/T   = 1/298,15 K + ln(R_ntc / 10 kΩ) / 3950      (a equação Beta, T em kelvin)
+</code></pre></div>
+<p>Em vez de fazer essa conta a cada leitura, o firmware guarda uma <strong>tabela</strong>: a temperatura exata em alguns pontos, e uma reta entre eles. A tabela é gerada no computador, onde logaritmo não custa nada, por <code>exemplos/cap07_tabela_ntc.cpp</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>// gerado por exemplos/cap07_tabela_ntc.cpp
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    {3740,  -200},   //  -20 C
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    {3495,  -100},   //  -10 C
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    {3156,     0},   //    0 C
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    {2738,   100},   //   10 C
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    {2278,   200},   //   20 C
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    {1825,   300},   //   30 C
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    {1419,   400},   //   40 C
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    {1081,   500},   //   50 C
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    { 815,   600},   //   60 C
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    { 613,   700},   //   70 C
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    { 462,   800},   //   80 C
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    { 350,   900},   //   90 C
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    { 267,  1000},   //  100 C
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>pior erro da interpolacao: 0.52 C (leitura 3631, exato -15.08 C)
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a> -20 C: Wokwi 3740, equacao  3740.1, tabela -20.0 C
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>   0 C: Wokwi 3156, equacao  3156.2, tabela   0.0 C
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  25 C: Wokwi 2048, equacao  2047.5, tabela  25.1 C
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  50 C: Wokwi 1081, equacao  1081.4, tabela  50.0 C
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  80 C: Wokwi  462, equacao   461.6, tabela  80.0 C
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a> 100 C: Wokwi  267, equacao   267.0, tabela 100.0 C
+</code></pre></div>
+<p>As linhas "Wokwi" são leituras medidas no simulador, com o NTC ajustado em cada temperatura: elas batem com a equação, o que confirma o modelo do módulo. E, entre todas as leituras possíveis, a reta erra no máximo 0,52 °C, no trecho mais curvo (perto de −15 °C). Com pontos a cada 5 °C, o erro cairia; é uma troca entre memória e precisão que se decide medindo.</p>
+<p>A interpolação só usa inteiros:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// Interpolacao linear entre os dois pontos vizinhos, so com inteiros.</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">// Fora da tabela (frio demais, quente demais, fio solto ou em curto): invalida.</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kr">inline</span><span class="w"> </span><span class="n">Leitura</span><span class="w"> </span><span class="nf">ntc_para_decimos</span><span class="p">(</span><span class="kt">int32_t</span><span class="w"> </span><span class="n">bruto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">PONTOS_NTC</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">PontoNtc</span><span class="o">&amp;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TABELA_NTC</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">PontoNtc</span><span class="o">&amp;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TABELA_NTC</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bruto</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">bruto</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">bruto</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">bruto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">            </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">bruto</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">bruto</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">decimos_c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">decimos_c</span><span class="p">);</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">            </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">den</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">bruto</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">bruto</span><span class="p">;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="n">a</span><span class="p">.</span><span class="n">decimos_c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">num</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">den</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">den</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">};</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">};</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="o-adapter-um-sensor-que-fala-a-lingua-do-programa">O Adapter: um sensor que fala a língua do programa<a class="headerlink" href="#o-adapter-um-sensor-que-fala-a-lingua-do-programa" title="Permanent link">&para;</a></h2>
+<p>O que a função devolve não é só um número. É uma <code>Leitura</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Um numero na unidade do sensor (permil, decimos de grau...) e se ele presta.</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">struct</span><span class="w"> </span><span class="nc">Leitura</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">valor</span><span class="p">;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">valida</span><span class="p">;</span><span class="w">    </span><span class="c1">// false: fio solto, curto, ou fora da faixa que o sensor mede</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">};</span>
+</code></pre></div>
+<p>E cada sensor ganha uma classe que <strong>traduz</strong> o periférico para essa língua. O potenciômetro e o NTC são peças diferentes, mas as duas classes têm <strong>os mesmos métodos públicos</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Potenciometro</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">private</span><span class="o">:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pino_</span><span class="p">;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">public</span><span class="o">:</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">Potenciometro</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pino</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">pino_</span><span class="p">(</span><span class="n">pino</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="c1">// 11 dB: a faixa do ADC vai ate perto de 3,3 V (e o padrao, mas dito aqui).</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">inicia</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">analogSetPinAttenuation</span><span class="p">(</span><span class="n">pino_</span><span class="p">,</span><span class="w"> </span><span class="n">ADC_11db</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="c1">// 0 = todo para a esquerda, 1000 = todo para a direita. Sempre valida.</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="n">Leitura</span><span class="w"> </span><span class="n">le</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="n">escala</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">pino_</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">4095</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">),</span><span class="w"> </span><span class="nb">true</span><span class="p">};</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">minimo</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">maximo</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">unidade</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"permil"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="p">};</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="k">class</span><span class="w"> </span><span class="nc">SensorNtc</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="k">private</span><span class="o">:</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pino_</span><span class="p">;</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="k">public</span><span class="o">:</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">SensorNtc</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pino</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">pino_</span><span class="p">(</span><span class="n">pino</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">inicia</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">analogSetPinAttenuation</span><span class="p">(</span><span class="n">pino_</span><span class="p">,</span><span class="w"> </span><span class="n">ADC_11db</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="w">    </span><span class="n">Leitura</span><span class="w"> </span><span class="n">le</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ntc_para_decimos</span><span class="p">(</span><span class="n">analogRead</span><span class="p">(</span><span class="n">pino_</span><span class="p">));</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="w">    </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">minimo</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">TABELA_NTC</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">decimos_c</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="w">    </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">maximo</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">TABELA_NTC</span><span class="p">[</span><span class="n">PONTOS_NTC</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">decimos_c</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">unidade</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"decimos de C"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a><span class="p">};</span>
+</code></pre></div>
+<p><code>minimo()</code> e <code>maximo()</code> dizem a faixa que o sensor mede, na unidade dele. Com eles, a lógica consegue posicionar um ponteiro ou decidir um limiar <strong>sem saber que sensor é</strong>. É isso que permite a troca da seção seguinte.</p>
+<p>No computador, com o Arduino falso, as mesmas classes respondem assim (<code>exemplos/cap07_adapters.cpp</code>; o teste põe a leitura no pino com <code>falso::poe_analogico</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>atenuacao do 34 depois de inicia(): 3 (ADC_11db = 3)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pot: 501 permil, valida 1
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ntc: 251 decimos de C, valida 1
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ntc por leitura do ADC: 4095-&gt;invalida 3740-&gt;-200 3156-&gt;0 2048-&gt;251 462-&gt;800 267-&gt;1000 100-&gt;invalida 0-&gt;invalida
+</code></pre></div>
+<h2 id="validar-a-faixa-e-ate-onde-isso-vai">Validar a faixa, e até onde isso vai<a class="headerlink" href="#validar-a-faixa-e-ate-onde-isso-vai" title="Permanent link">&para;</a></h2>
+<p>Uma leitura fora da tabela é <strong>inválida</strong>: frio abaixo de −20 °C, calor acima de 100 °C, ou um defeito que leva a saída a um extremo (4095 ou 0). No Wokwi, com o controle do NTC no mínimo dele (−24 °C), o termômetro imprime <code>leitura invalida</code>, o buzzer fica quieto e o ponteiro fica onde estava. Um sensor quebrado não deve disparar um alarme, nem esconder um de verdade: o programa precisa <strong>saber</strong> que não sabe.</p>
+<p>Mas a validação por faixa tem limite, e o simulador mostra qual. Com o fio de sinal do NTC desconectado, o pino 35 fica <strong>flutuando</strong> e o ADC lê ruído. O Serial imprimiu, em segundos seguidos:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>154 decimos de C
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>194 decimos de C
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>115 decimos de C
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>305 decimos de C
+</code></pre></div>
+<p>Todas são temperaturas plausíveis, dentro da faixa, e todas são lixo. Pegar esse defeito exige outro tipo de pergunta: "a temperatura pode subir 19 °C em um segundo?". É o padrão <em>Smart Data</em> do capítulo 18, sobre robustez. Por ora, guarde a lição: <strong>válido quer dizer dentro da faixa, e não necessariamente certo</strong>.</p>
+<h2 id="atuadores-o-pwm-do-esp32-no-core-3x">Atuadores: o PWM do ESP32 no core 3.x<a class="headerlink" href="#atuadores-o-pwm-do-esp32-no-core-3x" title="Permanent link">&para;</a></h2>
+<p>O periférico de PWM do ESP32 se chama <strong>LEDC</strong>. No core Arduino 3.x, ele é usado por pino:</p>
+<table>
+<thead>
+<tr>
+<th>Função</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ledcAttach(pino, freq_hz, bits)</code></td>
+<td>liga o PWM no pino, com essa frequência e essa resolução de <em>duty</em></td>
+</tr>
+<tr>
+<td><code>ledcWrite(pino, duty)</code></td>
+<td><em>duty</em> de 0 (sempre desligado) a 2<sup>bits</sup> − 1, que o core transforma em "sempre ligado"</td>
+</tr>
+<tr>
+<td><code>ledcWriteTone(pino, freq_hz)</code></td>
+<td>onda quadrada nessa frequência (para buzzer); 0 silencia</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Código antigo da internet usa outra API</p>
+<p>Até o core 2.x, o PWM era configurado por <strong>canal</strong>, com <code>ledcSetup(canal, freq, bits)</code> e <code>ledcAttachPin(pino, canal)</code>. O core 3.x removeu essas funções. Se um exemplo copiado da internet não compila com <code>'ledcSetup' was not declared in this scope</code>, é isso.</p>
+</div>
+<p>Cada atuador ganha seu Adapter. Para o LED, o resto do programa fala em permil, como o potenciômetro:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// Brilho de um LED (ou qualquer carga) em permil: 0 apagado, 1000 aceso.</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">SaidaPwm</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">private</span><span class="o">:</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pino_</span><span class="p">;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">freq_hz_</span><span class="p">;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">bits_</span><span class="p">;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="k">public</span><span class="o">:</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span><span class="n">SaidaPwm</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pino</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">freq_hz</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">bits</span><span class="p">)</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">pino_</span><span class="p">(</span><span class="n">pino</span><span class="p">),</span><span class="w"> </span><span class="n">freq_hz_</span><span class="p">(</span><span class="n">freq_hz</span><span class="p">),</span><span class="w"> </span><span class="n">bits_</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">inicia</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">ledcAttach</span><span class="p">(</span><span class="n">pino_</span><span class="p">,</span><span class="w"> </span><span class="n">freq_hz_</span><span class="p">,</span><span class="w"> </span><span class="n">bits_</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">escreve_permil</span><span class="p">(</span><span class="kt">int32_t</span><span class="w"> </span><span class="n">permil</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">maximo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">bits_</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">        </span><span class="n">ledcWrite</span><span class="p">(</span><span class="n">pino_</span><span class="p">,</span><span class="w"> </span><span class="n">escala</span><span class="p">(</span><span class="n">permil</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">maximo</span><span class="p">));</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="p">};</span>
+</code></pre></div>
+<p>O projeto <code>wokwi/cap07-brilho/</code> liga o potenciômetro ao LED vermelho com esses dois Adapters, e o <code>sketch.ino</code> não tem nenhum <code>4095</code> nem nenhum <em>duty</em>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">Potenciometro</span><span class="w"> </span><span class="nf">botao_giratorio</span><span class="p">(</span><span class="mi">34</span><span class="p">);</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">SaidaPwm</span><span class="w"> </span><span class="nf">led_vermelho</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="w"> </span><span class="mi">5000</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span><span class="w">   </span><span class="c1">// 5 kHz, 10 bits</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="n">Leitura</span><span class="w"> </span><span class="n">posicao</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">botao_giratorio</span><span class="p">.</span><span class="n">le</span><span class="p">();</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="n">led_vermelho</span><span class="p">.</span><span class="n">escreve_permil</span><span class="p">(</span><span class="n">posicao</span><span class="p">.</span><span class="n">valor</span><span class="p">);</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="c1">// ... imprime quando muda</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="p">}</span>
+</code></pre></div>
+<p>No Wokwi, com o potenciômetro em três posições, o Serial e o brilho que o simulador desenha no LED foram estes:</p>
+<table>
+<thead>
+<tr>
+<th>Potenciômetro</th>
+<th>Serial</th>
+<th>Brilho desenhado (0 a 1)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>0 permil</code></td>
+<td>0</td>
+</tr>
+<tr>
+<td>256</td>
+<td><code>250 permil</code></td>
+<td>0,61</td>
+</tr>
+<tr>
+<td>1023</td>
+<td><code>1000 permil</code></td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>Um quarto do <em>duty</em> aparece como bem mais que um quarto do brilho. O olho humano percebe brilho de forma não linear, e o simulador imita isso. Em produto de verdade, quem quer que "50%" <strong>pareça</strong> metade aplica uma correção (a "correção gama") dentro do Adapter, e o resto do programa nem fica sabendo.</p>
+<h3 id="o-servo">O servo<a class="headerlink" href="#o-servo" title="Permanent link">&para;</a></h3>
+<p>Um servo de hobby recebe um pulso a cada 20 ms (50 Hz), e a <strong>largura</strong> do pulso diz o ângulo. No Wokwi, com o PWM de 14 bits a 50 Hz, a largura do pulso e o ângulo do servo foram:</p>
+<table>
+<thead>
+<tr>
+<th>Pulso</th>
+<th>500 µs</th>
+<th>544 µs</th>
+<th>1000 µs</th>
+<th>1500 µs</th>
+<th>2000 µs</th>
+<th>2400 µs</th>
+<th>2500 µs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ângulo no Wokwi</td>
+<td>0°</td>
+<td>0°</td>
+<td>44°</td>
+<td>93°</td>
+<td>141°</td>
+<td>180°</td>
+<td>180°</td>
+</tr>
+</tbody>
+</table>
+<p>Uma reta de 544 µs (0°) a 2400 µs (180°), com batente nas pontas. São os mesmos extremos da biblioteca <code>Servo</code> do Arduino. Servos reais variam (500–2500 µs e 1000–2000 µs são comuns), e por isso os extremos são parâmetros do construtor: é a <strong>calibração</strong> do atuador, guardada no Adapter.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ServoMotor</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">private</span><span class="o">:</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pino_</span><span class="p">;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">pulso_min_us_</span><span class="p">;</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">pulso_max_us_</span><span class="p">;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">FREQ_HZ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">;</span><span class="w">      </span><span class="c1">// periodo de 20 ms</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">BITS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span><span class="p">;</span><span class="w">          </span><span class="c1">// 20000 us viram 16384 passos</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">PERIODO_US</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20000</span><span class="p">;</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="k">public</span><span class="o">:</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">ServoMotor</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pino</span><span class="p">,</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">pulso_min_us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">544</span><span class="p">,</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">pulso_max_us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2400</span><span class="p">)</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">pino_</span><span class="p">(</span><span class="n">pino</span><span class="p">),</span><span class="w"> </span><span class="n">pulso_min_us_</span><span class="p">(</span><span class="n">pulso_min_us</span><span class="p">),</span><span class="w"> </span><span class="n">pulso_max_us_</span><span class="p">(</span><span class="n">pulso_max_us</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">inicia</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">ledcAttach</span><span class="p">(</span><span class="n">pino_</span><span class="p">,</span><span class="w"> </span><span class="n">FREQ_HZ</span><span class="p">,</span><span class="w"> </span><span class="n">BITS</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">    </span><span class="c1">// 0 a 180 graus; fora disso, satura no batente.</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">vai_para</span><span class="p">(</span><span class="kt">int32_t</span><span class="w"> </span><span class="n">graus</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">pulso_us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">escala</span><span class="p">(</span><span class="n">graus</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span><span class="w"> </span><span class="n">pulso_min_us_</span><span class="p">,</span><span class="w"> </span><span class="n">pulso_max_us_</span><span class="p">);</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">        </span><span class="n">ledcWrite</span><span class="p">(</span><span class="n">pino_</span><span class="p">,</span><span class="w"> </span><span class="n">escala</span><span class="p">(</span><span class="n">pulso_us</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">PERIODO_US</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">BITS</span><span class="p">));</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="p">};</span>
+</code></pre></div>
+<p>São duas escalas encadeadas: graus para microssegundos, e microssegundos para passos do <em>duty</em>. O construtor tem três parâmetros, mas os dois últimos têm valor padrão. Então <code>ServoMotor ponteiro(13);</code> chama o construtor com <strong>um</strong> argumento, e por isso ele leva <code>explicit</code>.</p>
+<h3 id="o-buzzer">O buzzer<a class="headerlink" href="#o-buzzer" title="Permanent link">&para;</a></h3>
+<p>O buzzer passivo precisa de uma onda quadrada na frequência do som. A classe só esconde o <code>ledcWriteTone</code> e lembra o que está tocando, para não reconfigurar o timer a cada volta do <code>loop()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Buzzer</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">private</span><span class="o">:</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pino_</span><span class="p">;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">tocando_hz_</span><span class="p">;</span><span class="w">    </span><span class="c1">// 0: em silencio</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">public</span><span class="o">:</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">Buzzer</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pino</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">pino_</span><span class="p">(</span><span class="n">pino</span><span class="p">),</span><span class="w"> </span><span class="n">tocando_hz_</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">inicia</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">ledcAttach</span><span class="p">(</span><span class="n">pino_</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span><span class="w"> </span><span class="n">silencia</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">toca</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">freq_hz</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">freq_hz</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">tocando_hz_</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">    </span><span class="c1">// reconfigurar o timer a cada volta faria clique</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">            </span><span class="n">ledcWriteTone</span><span class="p">(</span><span class="n">pino_</span><span class="p">,</span><span class="w"> </span><span class="n">freq_hz</span><span class="p">);</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">            </span><span class="n">tocando_hz_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">freq_hz</span><span class="p">;</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">silencia</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">toca</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">tocando</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">tocando_hz_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="p">};</span>
+</code></pre></div>
+<p>No computador, os três atuadores escrevem no PWM falso exatamente o que se espera:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>servo: 50 Hz, 14 bits
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  -10 graus -&gt; duty 446
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  0 graus -&gt; duty 446
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  90 graus -&gt; duty 1206
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  180 graus -&gt; duty 1966
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  200 graus -&gt; duty 1966
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>led 250 permil -&gt; duty 256 de 1024
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>buzzer: 880 Hz, duty 511, tocando 1
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>buzzer silenciado: duty 0, tocando 0
+</code></pre></div>
+<p>Os <code>446</code> e <code>1966</code> do <code>loop()</code> do começo do capítulo estão aí, mas agora são <strong>resultado</strong> de uma conta com nome, e não números mágicos.</p>
+<h2 id="o-termometro-de-ponteiro">O termômetro de ponteiro<a class="headerlink" href="#o-termometro-de-ponteiro" title="Permanent link">&para;</a></h2>
+<p>O projeto <code>wokwi/cap07-termometro/</code> junta tudo. Ele tem o potenciômetro e o NTC ligados ao mesmo tempo, para a troca da próxima seção não exigir mexer em fio:</p>
+<p><img alt="Esquemático do projeto cap07-termometro" src="../../esquemas/cap07-termometro-claro.svg#only-light" />
+<img alt="Esquemático do projeto cap07-termometro" src="../../esquemas/cap07-termometro-escuro.svg#only-dark" /></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">using</span><span class="w"> </span><span class="n">Sensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SensorNtc</span><span class="p">;</span><span class="w">        </span><span class="c1">// ou: using Sensor = Potenciometro;</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">Sensor</span><span class="w"> </span><span class="nf">sensor</span><span class="p">(</span><span class="mi">35</span><span class="p">);</span><span class="w">               </span><span class="c1">//     Sensor sensor(34);</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">ServoMotor</span><span class="w"> </span><span class="nf">ponteiro</span><span class="p">(</span><span class="mi">13</span><span class="p">);</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="n">Buzzer</span><span class="w"> </span><span class="nf">alarme</span><span class="p">(</span><span class="mi">14</span><span class="p">);</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">Temporizador</span><span class="w"> </span><span class="nf">um_segundo</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span><span class="n">sensor</span><span class="p">.</span><span class="n">inicia</span><span class="p">();</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="n">ponteiro</span><span class="p">.</span><span class="n">inicia</span><span class="p">();</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">    </span><span class="n">alarme</span><span class="p">.</span><span class="n">inicia</span><span class="p">();</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">    </span><span class="n">um_segundo</span><span class="p">.</span><span class="n">reinicia</span><span class="p">();</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"termometro de ponteiro"</span><span class="p">);</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="p">}</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">    </span><span class="n">Leitura</span><span class="w"> </span><span class="n">leitura</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">le</span><span class="p">();</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leitura</span><span class="p">.</span><span class="n">valida</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="w">        </span><span class="n">ponteiro</span><span class="p">.</span><span class="n">vai_para</span><span class="p">(</span><span class="n">escala</span><span class="p">(</span><span class="n">leitura</span><span class="p">.</span><span class="n">valor</span><span class="p">,</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">minimo</span><span class="p">(),</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">maximo</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">));</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">limiar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">minimo</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">sensor</span><span class="p">.</span><span class="n">maximo</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">minimo</span><span class="p">())</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leitura</span><span class="p">.</span><span class="n">valor</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">limiar</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="w">            </span><span class="n">alarme</span><span class="p">.</span><span class="n">toca</span><span class="p">(</span><span class="mi">880</span><span class="p">);</span>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="w">            </span><span class="n">alarme</span><span class="p">.</span><span class="n">silencia</span><span class="p">();</span>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="w">        </span><span class="n">alarme</span><span class="p">.</span><span class="n">silencia</span><span class="p">();</span><span class="w">      </span><span class="c1">// sensor quebrado nao e motivo para apitar</span>
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a>
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">um_segundo</span><span class="p">.</span><span class="n">expirou</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leitura</span><span class="p">.</span><span class="n">valida</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a><span class="w">            </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">leitura</span><span class="p">.</span><span class="n">valor</span><span class="p">);</span>
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a><span class="w">            </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">" "</span><span class="p">);</span>
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a><span class="w">            </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">sensor</span><span class="p">.</span><span class="n">unidade</span><span class="p">());</span>
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a><span class="w">            </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"leitura invalida"</span><span class="p">);</span>
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a><span class="p">}</span>
+</code></pre></div>
+<p>Compare com o <code>loop()</code> do começo do capítulo. Nenhum número dele pertence a uma peça. O ponteiro percorre a faixa do sensor de 0 a 180 graus, e o alarme dispara a 80% da faixa: com o NTC, 76 °C. No Wokwi, mexendo no controle do NTC (que vai de −24 °C a 80 °C):</p>
+<table>
+<thead>
+<tr>
+<th>NTC em</th>
+<th>Serial</th>
+<th>Servo</th>
+<th>Buzzer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>25 °C</td>
+<td><code>251 decimos de C</code></td>
+<td>68°</td>
+<td>quieto</td>
+</tr>
+<tr>
+<td>79 °C</td>
+<td><code>791 decimos de C</code></td>
+<td>149°</td>
+<td>apitando</td>
+</tr>
+<tr>
+<td>−24 °C</td>
+<td><code>leitura invalida</code></td>
+<td>fica onde estava</td>
+<td>quieto</td>
+</tr>
+</tbody>
+</table>
+<h2 id="a-troca-o-tipo-numa-linha">A troca: o tipo numa linha<a class="headerlink" href="#a-troca-o-tipo-numa-linha" title="Permanent link">&para;</a></h2>
+<p>As duas primeiras linhas do sketch usam um <strong>apelido de tipo</strong>: <code>using Sensor = SensorNtc;</code> diz que, neste arquivo, <code>Sensor</code> é outro nome para <code>SensorNtc</code>. Trocando essas duas linhas por</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">using</span><span class="w"> </span><span class="n">Sensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Potenciometro</span><span class="p">;</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">Sensor</span><span class="w"> </span><span class="nf">sensor</span><span class="p">(</span><span class="mi">34</span><span class="p">);</span>
+</code></pre></div>
+<p>e rodando de novo, com o potenciômetro no meio do curso, o Serial passa a mostrar <code>501 permil</code> e o servo vai a 90°. Nada no <code>loop()</code> mudou, porque o <code>loop()</code> só usa o que as duas classes têm em comum: <code>le()</code>, <code>minimo()</code>, <code>maximo()</code> e <code>unidade()</code>.</p>
+<p>Isso tem um limite, e ele é a porta do próximo capítulo. A troca acontece <strong>ao compilar</strong>: o programa escolhe um sensor e fica com ele. E se uma função tivesse que aceitar <strong>qualquer</strong> sensor, recebido como parâmetro, para um teste passar um sensor falso e a placa passar o NTC? Duas classes com os mesmos nomes de método não bastam para isso. É preciso dizer ao compilador que elas são <strong>o mesmo tipo de coisa</strong>. É o assunto do capítulo 8: interfaces, com <code>virtual</code>.</p>
+<div class="admonition abstract">
+<p class="admonition-title">Padrão de projeto: Adapter (Hardware Adapter) e sensor inteligente</p>
+<p>O <strong>Adapter</strong> (catálogo GoF) converte a interface que uma peça oferece na interface que o programa espera. Em firmware, Douglass chama de <strong>Hardware Adapter</strong> a classe que fica entre um periférico e a lógica: aqui, <code>Potenciometro</code> e <code>SensorNtc</code> transformam "0 a 4095" em "permil" e "décimos de grau", e <code>ServoMotor</code> transforma "graus" em "<em>duty</em> de 14 bits".</p>
+<p>Um Adapter de sensor que entrega a <strong>grandeza de engenharia</strong>, já calibrada, com a faixa e a validade junto, é o que a Instrumentação chama de <strong>sensor inteligente</strong>. A calibração (a tabela do NTC, os extremos do servo) mora no Adapter, e só nele.</p>
+<p>O Adapter volta no capítulo 17, na frente de displays diferentes. E a pergunta da última seção (aceitar qualquer sensor) é o capítulo 8.</p>
+</div>
+<h2 id="erros-comuns">Erros comuns<a class="headerlink" href="#erros-comuns" title="Permanent link">&para;</a></h2>
+<p><strong>Ler o sensor num pino do ADC2 e funcionar até ligar o Wi-Fi.</strong> Os pinos do ADC2 param de ler quando o Wi-Fi está ativo. Sensor analógico vai nos pinos 32 a 39 (ADC1); o curso usa 34 e 35.</p>
+<p><strong><code>map()</code> com resultado fora da faixa.</strong> O <code>map()</code> não satura: uma leitura acima do esperado produz um ângulo acima de 180 ou um <em>duty</em> acima do máximo. Use <code>escala()</code>, ou satura antes de converter.</p>
+<p><strong>Multiplicar antes de dividir em 32 bits.</strong> <code>bruto * 3300 / 4095</code> cabe em <code>int32_t</code>; <code>pulso * 16384 * 1000</code> não cabe. Quando o produto do meio pode passar de 2 bilhões, faça a conta em <code>int64_t</code>.</p>
+<p><strong>Esquecer a unidade.</strong> <code>int32_t temperatura = 251;</code> são 251 graus ou 25,1? Ponha a unidade no nome (<code>decimos_c</code>) ou no tipo de retorno (<code>Leitura</code> com <code>unidade()</code>).</p>
+<p><strong>Confiar em "válido".</strong> A validação por faixa pega curto e circuito aberto que levam a leitura a um extremo, mas não pega pino flutuando. Válido quer dizer plausível.</p>
+<p><strong>Usar <code>ledcSetup</code> e <code>ledcAttachPin</code>.</strong> É a API do core 2.x, removida no 3.x. Use <code>ledcAttach(pino, freq, bits)</code> e <code>ledcWrite(pino, duty)</code>.</p>
+<p><strong>Chamar <code>ledcWriteTone</code> a cada volta do <code>loop()</code>.</strong> Ele reconfigura o timer do PWM. Lembre o que está tocando, como o <code>Buzzer</code> faz.</p>
+<h2 id="resumo">Resumo<a class="headerlink" href="#resumo" title="Permanent link">&para;</a></h2>
+<ul>
+<li>O ADC do ESP32 devolve 0 a 4095 (12 bits). No Wokwi ele é ideal; no chip real, entorta perto das pontas. A conversão para a unidade útil mora num Adapter.</li>
+<li><code>escala()</code> converte faixas com arredondamento, saturação e conta em 64 bits; o <code>map()</code> do Arduino trunca e não satura.</li>
+<li>Grandezas em inteiros com a unidade no nome: <code>permil</code>, <code>decimos_c</code>, <code>pulso_us</code>.</li>
+<li>O NTC vira temperatura por uma tabela gerada no computador e interpolação inteira; o pior erro, medido, é 0,52 °C.</li>
+<li>Um sensor inteligente entrega <code>Leitura</code> (valor e validade), com a faixa (<code>minimo()</code>, <code>maximo()</code>) e a unidade. Válido não quer dizer certo.</li>
+<li>O PWM do core 3.x é por pino: <code>ledcAttach</code>, <code>ledcWrite</code>, <code>ledcWriteTone</code>. Servo é PWM de 50 Hz com pulso de 544 a 2400 µs no Wokwi.</li>
+<li>Classes com os mesmos métodos se trocam pelo tipo (<code>using Sensor = ...</code>), ao compilar. Para trocar em tempo de execução, ou num teste, o capítulo 8 traz interfaces.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.indexes", "content.code.copy", "content.code.annotate", "content.tabs.link", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
