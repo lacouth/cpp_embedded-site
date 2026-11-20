@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Continuação do curso C++ do Zero: C++ aplicado a sistemas embarcados e de tempo real no ESP32 (simulado no Wokwi), de classes que controlam pinos até escalonamento, filas e semáforos do FreeRTOS.">
+        <meta name="description" content="Continuação do curso C++ do Zero: padrões de projeto de sistemas embarcados e de tempo real em C++ no ESP32 (simulado no Wokwi), de classes que controlam pinos até objetos ativos, filas e semáforos do FreeRTOS.">
       
       
         <meta name="author" content="lacouth">
@@ -27,7 +27,7 @@
     
     
       
-        <title>Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++</title>
+        <title>Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tecnicas-de-programacao-ii-sistemas-embarcados-e-de-tempo-real-com-c" class="md-skip">
+        <a href="#tecnicas-de-programacao-ii-padroes-de-projeto-para-sistemas-embarcados-em-c" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
-    <a href="." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-header__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
+    <a href="." title="Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++" class="md-header__button md-logo" aria-label="Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,7 +108,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
+            Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -232,13 +232,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navegação" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" class="md-nav__button md-logo" aria-label="Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++" data-md-component="logo">
+    <a href="." title="Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++" class="md-nav__button md-logo" aria-label="Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++
+    Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++
   </label>
   
     <div class="md-nav__source">
@@ -1992,7 +1992,7 @@
   
 
 
-<h1 id="tecnicas-de-programacao-ii-sistemas-embarcados-e-de-tempo-real-com-c">Técnicas de Programação II: Sistemas Embarcados e de Tempo Real com C++<a class="headerlink" href="#tecnicas-de-programacao-ii-sistemas-embarcados-e-de-tempo-real-com-c" title="Permanent link">&para;</a></h1>
+<h1 id="tecnicas-de-programacao-ii-padroes-de-projeto-para-sistemas-embarcados-em-c">Técnicas de Programação II: Padrões de Projeto para Sistemas Embarcados em C++<a class="headerlink" href="#tecnicas-de-programacao-ii-padroes-de-projeto-para-sistemas-embarcados-em-c" title="Permanent link">&para;</a></h1>
 <p>Bem-vindo(a)! Este curso continua o <strong><a href="https://lacouth.github.io/cpp_begins-site/">C++ do Zero</a></strong>. Lá você aprendeu a linguagem; aqui você vai usá-la para o que ela faz de melhor fora de um PC: <strong>controlar hardware, e no tempo certo</strong>. Tudo roda num ESP32 simulado no <a href="setup/wokwi/">Wokwi</a>, direto no navegador, sem precisar comprar placa nenhuma.</p>
 <h2 id="para-quem-e-este-curso">Para quem é este curso<a class="headerlink" href="#para-quem-e-este-curso" title="Permanent link">&para;</a></h2>
 <p>Para quem já escreveu uma classe em C++, mesmo que sem muita segurança. Se você fez o C++ do Zero, está pronto. Se veio por outro caminho (sabe C, mas <code>class</code>, construtor e referência ainda soam estranhos), comece pela página de <a href="nivelamento/">Nivelamento</a>: ela diz exatamente o que revisar antes da primeira aula.</p>
