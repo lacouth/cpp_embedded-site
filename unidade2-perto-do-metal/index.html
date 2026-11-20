@@ -690,6 +690,8 @@
       
         
       
+        
+      
     
     
     
@@ -815,6 +817,34 @@
     
   
     7. ADC e PWM atrás de um Adapter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08-interfaces-testabilidade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Interfaces, HAL e testabilidade
   
 
     
@@ -1251,6 +1281,8 @@
       
         
       
+        
+      
     
     
     
@@ -1501,6 +1533,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../listas/lista08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 08 · Interfaces e padrões de testabilidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1519,6 +1579,8 @@
       
         
           
+        
+      
         
       
         
@@ -1592,6 +1654,34 @@
     
   
     Temas sugeridos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projeto/esqueleto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Esqueleto do projeto
   
 
     
@@ -1895,7 +1985,7 @@
 <p>Semanas 3 a 5. Em Sistemas Microcontrolados você já fez o hardware funcionar: ADC, PWM, interrupções. Esta unidade pergunta outra coisa: <strong>como organizar o código que fala com o hardware</strong> para que ele seja rápido, legível, trocável e testável sem placa. Cada capítulo apresenta um padrão de acesso ao hardware e o C++ que o torna seguro.</p>
 <div class="admonition warning">
 <p class="admonition-title">Em construção</p>
-<p>Os capítulos 5, 6 e 7 estão prontos; os outros ainda estão sendo escritos e aparecem na tabela como plano.</p>
+<p>Os capítulos 5 a 8 estão prontos; os outros ainda estão sendo escritos e aparecem na tabela como plano.</p>
 </div>
 <table>
 <thead>
@@ -1936,18 +2026,18 @@
 <tr>
 <td>4</td>
 <td>B</td>
-<td>8. Interfaces e HAL (aula 1 de 2)</td>
-<td>interface, injeção de dependência</td>
-<td>classe abstrata, <code>virtual</code>, <code>override</code>, destrutor virtual</td>
-<td>os drivers da Unidade 1 atrás de uma interface</td>
+<td><a href="08-interfaces-testabilidade/">8. Interfaces e HAL</a> (aula 1 de 2)</td>
+<td>interface, injeção de dependência, HAL</td>
+<td>classe abstrata, <code>virtual</code>, <code>override</code>, destrutor virtual, referências no lugar do heap</td>
+<td>a bomba da caixa d'água: <code>ISensor</code>, <code>ISaida</code> e <code>IRelogio</code>; módulo relé</td>
 </tr>
 <tr>
 <td>5</td>
 <td>A</td>
-<td>8. Padrões de testabilidade (aula 2 de 2)</td>
-<td>Stub, Fake, Spy, Mock; <em>seams</em></td>
-<td>implementação real × falsa, teste antes do código</td>
-<td>o mesmo termostato no host e no Wokwi</td>
+<td><a href="08-interfaces-testabilidade/#parte-2-padroes-de-testabilidade">8. Padrões de testabilidade</a> (aula 2 de 2)</td>
+<td>Stub, Fake, Spy, Mock; <em>seams</em>; Decorator</td>
+<td>dublês sem heap, teste antes do código</td>
+<td>a mesma bomba testada no computador e rodando no Wokwi; o esqueleto do projeto</td>
 </tr>
 <tr>
 <td>5</td>

@@ -688,6 +688,8 @@
       
         
       
+        
+      
     
     
     
@@ -813,6 +815,34 @@
     
   
     7. ADC e PWM atrás de um Adapter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade2-perto-do-metal/08-interfaces-testabilidade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Interfaces, HAL e testabilidade
   
 
     
@@ -1249,6 +1279,8 @@
       
         
       
+        
+      
     
     
     
@@ -1499,6 +1531,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../listas/lista08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lista 08 · Interfaces e padrões de testabilidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1517,6 +1577,8 @@
       
         
           
+        
+      
         
       
         
@@ -1590,6 +1652,34 @@
     
   
     Temas sugeridos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projeto/esqueleto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Esqueleto do projeto
   
 
     
@@ -2062,6 +2152,50 @@
 <tr>
 <td><strong>interpolação linear</strong></td>
 <td>estimar um valor entre dois pontos conhecidos de uma tabela pela reta que os liga. (cap. 7)</td>
+</tr>
+<tr>
+<td><strong>interface</strong></td>
+<td>uma classe abstrata (só métodos <code>virtual ... = 0</code>) que diz <strong>o que</strong> uma peça faz, sem dizer <strong>como</strong>: <code>ISensor</code>, <code>ISaida</code>, <code>IRelogio</code>. (cap. 8)</td>
+</tr>
+<tr>
+<td><strong><code>override</code></strong></td>
+<td>marca o método de uma classe filha que substitui um <code>virtual</code> da base; o compilador confere que a substituição existe. (cap. 8)</td>
+</tr>
+<tr>
+<td><strong>tabela de métodos virtuais</strong></td>
+<td>a tabela, uma por classe, que a chamada <code>virtual</code> consulta; cada objeto guarda um ponteiro para ela (4 bytes no ESP32). (cap. 8)</td>
+</tr>
+<tr>
+<td><strong>injeção de dependência</strong></td>
+<td>entregar a um objeto, pelo construtor, as peças de que ele precisa, em vez de ele ir buscá-las (<code>millis()</code>, um pino fixo). (cap. 8)</td>
+</tr>
+<tr>
+<td><strong>raiz de composição</strong></td>
+<td>o único lugar que cria as peças de verdade e as entrega à lógica; no curso, os objetos globais do <code>sketch.ino</code>. (cap. 8)</td>
+</tr>
+<tr>
+<td><strong>HAL</strong></td>
+<td><em>Hardware Abstraction Layer</em>: o conjunto de interfaces que isola a lógica do hardware. (cap. 8)</td>
+</tr>
+<tr>
+<td><strong>dublê de teste</strong></td>
+<td>o que substitui uma dependência num teste: <strong>stub</strong> (devolve o programado), <strong>fake</strong> (funciona, simplificado), <strong>spy</strong> (anota o que lhe fizeram), <strong>mock</strong> (confere a expectativa). (cap. 8)</td>
+</tr>
+<tr>
+<td><strong><em>seam</em></strong></td>
+<td>o ponto onde se troca o real pelo dublê sem editar o código testado: um arquivo incluído (<em>link seam</em>) ou um objeto injetado (<em>interface seam</em>). (cap. 8)</td>
+</tr>
+<tr>
+<td><strong>TDD</strong></td>
+<td><em>Test-Driven Development</em>: escrever o teste antes, vê-lo falhar, escrever o mínimo para passar, e então limpar. (cap. 8)</td>
+</tr>
+<tr>
+<td><strong>Decorator</strong></td>
+<td>padrão em que uma classe embrulha outra de mesma interface para acrescentar um comportamento (registrar, medir) sem mudá-la. (cap. 8)</td>
+</tr>
+<tr>
+<td><strong>relé</strong></td>
+<td>uma chave comandada por um sinal fraco, que liga e desliga uma carga de potência (bomba, motor, lâmpada). (cap. 8)</td>
 </tr>
 </tbody>
 </table>
